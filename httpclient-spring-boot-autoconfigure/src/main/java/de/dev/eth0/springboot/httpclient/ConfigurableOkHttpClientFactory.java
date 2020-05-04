@@ -4,6 +4,7 @@
 
 package de.dev.eth0.springboot.httpclient;
 
+import java.util.concurrent.TimeUnit;
 import org.springframework.cloud.commons.httpclient.DefaultOkHttpClientFactory;
 
 import okhttp3.OkHttpClient;
@@ -23,7 +24,13 @@ public class ConfigurableOkHttpClientFactory extends DefaultOkHttpClientFactory 
   @Override
   public OkHttpClient.Builder createBuilder(boolean disableSslValidation) {
     OkHttpClient.Builder builder = super.createBuilder(disableSslValidation);
-
+    configureTimeouts(builder);
     return builder;
+  }
+
+  private void configureTimeouts(OkHttpClient.Builder builder) {
+    builder.connectTimeout(httpClientProperties.getTimeouts().getConnectionTimeout(), TimeUnit.MILLISECONDS);
+    builder.readTimeout(httpClientProperties.getTimeouts().getSocketTimeout(), TimeUnit.MILLISECONDS);
+    builder.writeTimeout(httpClientProperties.getTimeouts().getSocketTimeout(), TimeUnit.MILLISECONDS);
   }
 }

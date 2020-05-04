@@ -4,6 +4,7 @@
 
 package de.dev.eth0.springboot.httpclient;
 
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.cloud.commons.httpclient.DefaultApacheHttpClientFactory;
 
@@ -22,7 +23,16 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
   @Override
   public HttpClientBuilder createBuilder() {
     HttpClientBuilder builder = super.createBuilder();
-
+    configureTimeouts(builder);
     return builder;
+  }
+
+  private void configureTimeouts(HttpClientBuilder builder) {
+    builder.setDefaultRequestConfig(RequestConfig.custom()
+        .setConnectTimeout(httpClientProperties.getTimeouts().getConnectionTimeout())
+        .setSocketTimeout(httpClientProperties.getTimeouts().getSocketTimeout())
+        .build());
+
+
   }
 }
