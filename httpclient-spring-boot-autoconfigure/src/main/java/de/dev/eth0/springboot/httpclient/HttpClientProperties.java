@@ -5,6 +5,9 @@
 package de.dev.eth0.springboot.httpclient;
 
 
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import javax.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -12,10 +15,56 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class HttpClientProperties {
 
-  private TimeoutConfiguration timeouts = new TimeoutConfiguration();
+  private final TimeoutConfiguration timeouts = new TimeoutConfiguration();
+  private ProxyConfiguration[] proxies = {};
+
+  public ProxyConfiguration[] getProxies() {
+    return proxies;
+  }
+
+  public void setProxies(ProxyConfiguration[] proxies) {
+    this.proxies = proxies;
+  }
 
   public TimeoutConfiguration getTimeouts() {
     return timeouts;
+  }
+
+  @Validated
+  public static class ProxyConfiguration {
+
+    public static final int DEFAULT_PORT = 3128;
+
+    private Pattern[] hostPatterns;
+
+    @NotBlank
+    private String host;
+
+    private int port = DEFAULT_PORT;
+
+    public Pattern[] getHostPatterns() {
+      return hostPatterns;
+    }
+
+    public void setHostPatterns(String[] hostPatterns) {
+      this.hostPatterns = Arrays.stream(hostPatterns).map(Pattern::compile).toArray(Pattern[]::new);
+    }
+
+    public String getHost() {
+      return host;
+    }
+
+    public void setHost(String host) {
+      this.host = host;
+    }
+
+    public int getPort() {
+      return port;
+    }
+
+    public void setPort(int port) {
+      this.port = port;
+    }
   }
 
   /**
