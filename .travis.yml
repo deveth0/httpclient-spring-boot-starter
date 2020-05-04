@@ -8,5 +8,6 @@ matrix:
   allow_failures:
     - jdk: openjdk-ea
 
-after_success:
-  - mvn clean test jacoco:report coveralls:report
+script:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn test jacoco:report coveralls:report
