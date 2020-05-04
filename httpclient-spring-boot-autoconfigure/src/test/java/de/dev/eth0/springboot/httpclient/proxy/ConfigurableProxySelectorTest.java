@@ -24,11 +24,13 @@ public class ConfigurableProxySelectorTest {
   private static final String MATCHING_URI = "http://example.com/foo/bar";
   private static final String NON_MATCHING_URI = "http://foobar.com/ipsum";
 
+  private static final HttpClientProperties.ProxyConfiguration NO_PATTERN_CONFIG = getProxyConfiguration("localhost-nopattern", 1337);
   private static final HttpClientProperties.ProxyConfiguration WILDCARD_CONFIG = getProxyConfiguration("localhost-wildcard", 1337, WILDCARD_HOST_PATTERN);
   private static final HttpClientProperties.ProxyConfiguration MATCHING_CONFIG = getProxyConfiguration("localhost", 3128, MATCHING_HOST_PATTERN);
   private static final HttpClientProperties.ProxyConfiguration NON_MATCHING_CONFIG = getProxyConfiguration("localhost-non-matching", 1337,
       NON_MATCHING_HOST_PATTERN);
 
+  private static final Proxy NO_PATTERN_PROXY = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(NO_PATTERN_CONFIG.getHost(), NO_PATTERN_CONFIG.getPort()));
   private static final Proxy WILDCARD_PROXY = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(WILDCARD_CONFIG.getHost(), WILDCARD_CONFIG.getPort()));
   private static final Proxy MATCHING_PROXY = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(MATCHING_CONFIG.getHost(), MATCHING_CONFIG.getPort()));
 
@@ -80,14 +82,13 @@ public class ConfigurableProxySelectorTest {
     List<Proxy> proxies = underTest.select(uri);
     assertThat(proxies).hasSize(1);
     assertThat(proxies).containsExactly(MATCHING_PROXY);
-
   }
 
+
   @Test
-  public void select_multipleMatching() throws URISyntaxException {
+  public void select_singleMatching_noPattern() throws URISyntaxException {
     HttpClientProperties.ProxyConfiguration[] proxyConfigs = {
-        MATCHING_CONFIG,
-        WILDCARD_CONFIG,
+        NO_PATTERN_CONFIG,
         NON_MATCHING_CONFIG
     };
 
@@ -95,9 +96,25 @@ public class ConfigurableProxySelectorTest {
 
     URI uri = new URI(MATCHING_URI);
     List<Proxy> proxies = underTest.select(uri);
-    assertThat(proxies).hasSize(2);
+    assertThat(proxies).hasSize(1);
+    assertThat(proxies).containsExactly(NO_PATTERN_PROXY);
+  }
 
-    assertThat(proxies).containsExactly(MATCHING_PROXY, WILDCARD_PROXY);
+  @Test
+  public void select_multipleMatching() throws URISyntaxException {
+    HttpClientProperties.ProxyConfiguration[] proxyConfigs = {
+        MATCHING_CONFIG,
+        WILDCARD_CONFIG,
+        NO_PATTERN_CONFIG,
+        NON_MATCHING_CONFIG
+    };
+
+    ConfigurableProxySelector underTest = new ConfigurableProxySelector(proxyConfigs);
+
+    URI uri = new URI(MATCHING_URI);
+    List<Proxy> proxies = underTest.select(uri);
+
+    assertThat(proxies).containsExactly(MATCHING_PROXY, WILDCARD_PROXY, NO_PATTERN_PROXY);
   }
 
 }
