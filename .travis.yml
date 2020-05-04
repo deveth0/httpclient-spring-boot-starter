@@ -7,3 +7,6 @@ jdk:
 matrix:
   allow_failures:
     - jdk: openjdk-ea
+
+after_success:
+  - mvn clean test jacoco:report coveralls:report
