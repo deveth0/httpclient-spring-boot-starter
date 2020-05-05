@@ -50,7 +50,7 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
       return;
     }
 
-    ConfigurableProxySelector proxySelector = new ConfigurableProxySelector(httpClientProperties.getProxies());
+    ConfigurableProxySelector proxySelector = new ConfigurableProxySelector(proxyConfig);
     SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(proxySelector);
     builder.setRoutePlanner(routePlanner);
   }

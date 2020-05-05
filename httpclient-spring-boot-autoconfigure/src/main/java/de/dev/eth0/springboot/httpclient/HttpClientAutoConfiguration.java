@@ -14,6 +14,9 @@ import org.springframework.cloud.commons.httpclient.ApacheHttpClientFactory;
 import org.springframework.cloud.commons.httpclient.OkHttpClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 
 import okhttp3.OkHttpClient;
 
@@ -28,7 +31,7 @@ public class HttpClientAutoConfiguration {
    * Configuration if Apache HttpClient is used
    */
   @Configuration
-  @ConditionalOnProperty(name = "httpclientfactories.apache.enabled", matchIfMissing = true)
+  @ConditionalOnProperty(name = { "spring.cloud.httpclientfactories.apache.enabled" })
   @ConditionalOnClass(HttpClient.class)
   static class ApacheHttpClientAutoConfiguration {
 
@@ -37,13 +40,19 @@ public class HttpClientAutoConfiguration {
     public ApacheHttpClientFactory apacheHttpClientFactory(HttpClientBuilder builder, HttpClientProperties httpClientProperties) {
       return new ConfigurableApacheHttpClientFactory(builder, httpClientProperties);
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ClientHttpRequestFactory clientHttpRequestFactory(ApacheHttpClientFactory apacheHttpClientFactory) {
+      return new HttpComponentsClientHttpRequestFactory(apacheHttpClientFactory.createBuilder().build());
+    }
   }
 
   /**
    * Configuration if OkHttp HttpClient is used
    */
   @Configuration
-  @ConditionalOnProperty(name = "httpclientfactories.ok.enabled", matchIfMissing = true)
+  @ConditionalOnProperty(name = { "spring.cloud.httpclientfactories.ok.enabled" })
   @ConditionalOnClass(OkHttpClient.class)
   static class OkHttpClientAutoConfiguration {
 
@@ -51,6 +60,12 @@ public class HttpClientAutoConfiguration {
     @ConditionalOnMissingBean
     public OkHttpClientFactory okHttpClientFactory(OkHttpClient.Builder builder, HttpClientProperties okHttpClientProperties) {
       return new ConfigurableOkHttpClientFactory(builder, okHttpClientProperties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ClientHttpRequestFactory clientHttpRequestFactory(OkHttpClientFactory okHttpClientFactory) {
+      return new OkHttp3ClientHttpRequestFactory(okHttpClientFactory.createBuilder(false).build());
     }
   }
 }

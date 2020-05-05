@@ -26,9 +26,7 @@
   <modules>
     <module>httpclient-spring-boot-autoconfigure</module>
     <module>httpclient-spring-boot-starter</module>
-    <!--
-    <module>http-proxy-spring-boot-starter</module>
-    <module>http-proxy-spring-boot-samples</module>-->
+    <module>httpclient-spring-boot-samples</module>
   </modules>
 
   <scm>
@@ -59,6 +57,21 @@
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-configuration-processor</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
         <version>${spring-boot.version}</version>
       </dependency>
@@ -68,8 +81,18 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>de.dev.eth0.spring-boot.httpclient</groupId>
+        <artifactId>httpclient-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-commons</artifactId>
+        <version>${spring-cloud.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
         <version>${spring-cloud.version}</version>
       </dependency>
 
@@ -77,6 +100,16 @@
         <groupId>org.hibernate.validator</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>6.0.18.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>2.10.2</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.openfeign</groupId>
+        <artifactId>feign-okhttp</artifactId>
+        <version>11.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -99,6 +132,11 @@
     </plugins>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+        </plugin>
         <!-- Report coverage to coveralls -->
         <plugin>
           <groupId>org.eluder.coveralls</groupId>

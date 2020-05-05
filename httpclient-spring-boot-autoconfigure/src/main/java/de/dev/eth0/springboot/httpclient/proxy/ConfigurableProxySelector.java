@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.dev.eth0.springboot.httpclient.HttpClientProperties;
 
@@ -21,6 +23,8 @@ import de.dev.eth0.springboot.httpclient.HttpClientProperties;
  * Custom proxy selector
  */
 public class ConfigurableProxySelector extends ProxySelector {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ConfigurableProxySelector.class);
 
   private List<HttpClientProperties.ProxyConfiguration> proxyConfigurations;
 
@@ -38,6 +42,7 @@ public class ConfigurableProxySelector extends ProxySelector {
             Collectors.toList(),
             proxyList -> proxyList.isEmpty() ? Collections.singletonList(Proxy.NO_PROXY) : proxyList
         ));
+    LOG.debug("Matching proxies: {}", proxies);
     return proxies;
   }
 

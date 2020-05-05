@@ -74,7 +74,7 @@ public class HttpClientProperties {
   public static class TimeoutConfiguration {
 
     public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
-    public static final int DEFAULT_SOCKET_TIMEOUT = 20000;
+    public static final int DEFAULT_SOCKET_TIMEOUT = 10000;
 
     private int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
     private int socketTimeout = DEFAULT_SOCKET_TIMEOUT;

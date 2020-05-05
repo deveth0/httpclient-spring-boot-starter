@@ -48,6 +48,6 @@ public class ConfigurableOkHttpClientFactory extends DefaultOkHttpClientFactory 
       return;
     }
 
-    builder.proxySelector(new ConfigurableProxySelector(httpClientProperties.getProxies()));
+    builder.proxySelector(new ConfigurableProxySelector(proxyConfig));
   }
 }
