@@ -13,7 +13,7 @@ The `httpclient-spring-boot-starter` brings most of the required configuration w
  
 ```
 <dependency>
-  <groupId>de.dev.eth0.spring-boot.httpclient</groupId>
+  <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
   <artifactId>httpclient-spring-boot-starter</artifactId>
 </dependency>
 ```
