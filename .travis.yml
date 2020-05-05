@@ -1,13 +1,30 @@
 language: java
 
 jdk:
-  - openjdk11
-  - openjdk-ea
+- openjdk11
+- openjdk-ea
 
 matrix:
   allow_failures:
-    - jdk: openjdk-ea
+  - jdk: openjdk-ea
 
 script:
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - mvn test jacoco:report coveralls:report
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+- mvn test jacoco:report coveralls:report
+
+after_success:
+  - gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import travis/signingkey.asc
+  - gpg2 --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg --no-default-keyring
+    --import travis/signingkey.asc
+  - mvn clean deploy --settings travis/maven-settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=D4E7E9033BBC3785DB28D8DBBE5F392A05E8EEC0
+    -Dgpg.passphrase=$PASSPHRASE -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg
+
+env:
+  global:
+  - secure: q6ygKCaa1L3EXHWXpXV1IoBrbwy9SCte4nGM2x7V2Z4DEXlZG5SVh87IhAmXAEWSMwNr5pC9IvAHlKUeCLmAYk23OYByFrzzZTVhOQq3/OGMTfhY5e6g71xmMKb3ywBnHttCoOYLNfFrG1pExmf0y4TSsZdO37Z2+cb5gQEfY+QLr1bEBdsLKOSZ9ZzeX6jE7mESokNtP5s1nM0Ih/dhHP19ds/TUWzLhofQwouwyTWnmnepPmkrMI6vXxbR1dtrAo6prrzwKANDybRli6WuDtFxJZ3svStOyYovOfaeTQvTc7vmU9e0VTt2dIB0Bba1lzLf+tFtW3CJFJ+WfY7XCdkYRJHNRmqzlErRHld2dRARnLODFO3u8XVWG4qi9myADZRzeaBvLORZckIhfP33L7vlwMC2R/FgT+PEJgb0cLad3rxN/3jfHvwS8jZI2lk6mk6tPGDhE96jO61bzNVBswmRiZ7pr2DlGF6IOwgiLNXUb0vvXO5SReK2vHUm0+S7w9gliDfh6KSFQZSgTFl+WXfP/fmABFObzLfw8I2UgWsLUAK5vlWVSkCHJt40RpsK6jiaQnGB+Ebb16vwCv+CPdKnPpgHcNXpHHc02mnxhfvuYObhctk34D6s5UwjCQvA4TF3NTiXIAs5I+yZW4XK59twSK9hJJm/Vv4/vz2p6aQ=
+  - secure: suKf1vaEjqFX54XFmUZQi+PjoPy8Ux6sbOnwt2n26S5mmK8mNcJXnR5ChtLq2ezFg+kmNm+ZQ0KjyqVtS19wlzTaOEpeMacFQSLXsQtvi+NivdBFkfpXoxv6k7LVaE+t0I391lJO55ElvZy/an7t7hb3+t3j9yfsyaJcCLSMlPZn8chBBinRoCL8LKqe3DKs5DSexSfXiOEug4HCFamqeo4EBy7pT6i5aM0T6ZxWNn2dzhAYmiGXe9kxMAF1uINNZM9zi9olhCMRaiVQ8szCSPp+iqVe7V2/T5MLMR9nwYU7Qxuq4A1fLQIeFyJ0GgIrEAX2KaRMjhQbYK/De7AYhoWyH4OvdVwwbO9/UlKjzIAL9jrlAPpTzU4fzFDTZIVGFIoNJ9Laf9E/AT8N2xGTLCreaOnfSyjXjJw9Ixtc4GcE+K2JGIgr+SRxCHra2nIf5C6gZ1vgFpd1d2ztFsrCjpLK+qogftpXZKUxIHZmtNKCrn8qfqRUy4q9yXK52Qm1HaaPxsvgkvw4uTPwVCd0/p3gtJiWQAuVb5tC1yI9VkLhZoDZ1HouFaEBCVUvaHVm0p+OuoP4QUt+MeinNUOITZO6wVJG7RUDMxnoPogSAca8Vj10SImHetnE8M5RQEd3660HDxnl29G9a8vcMLVVrMfq+dJmzn1nIWBYH6vnlzI=
+  - secure: AhiCe6O7DEW9BAWTp4jXF9udcJrpbKKGCVQM/P8E34M6nqBQt+DOkjjoVo+5cigAdBWr8bMdyy8SQBmjAbKIyqbd5pYw8FX4iJ1YEgwa2aqwSbHhrD7xfZAbHTH9M+bjctQE0aceLLq2iiqTrkvDP8fDxPLvle3cYK3ud3exhXICHe+KSjgRekVFNFawEKR3Oht4NUWRqkjpTo9cOcH/VRVmGGg5c7yvGMGK8vfSxuUxn1Ug694IuOTtfjA+8T8ncqJXxe5VUtgf8zT6OkmViAEvQFtbIhCpds2s4pl5XamCFZwzT70mRjmslkVfWFabY4KrV45R/Rc6WQ5kFc1I0TXaJT4BPLmmV9GBu5fAZssCJ3LVdJLLj3A+8b5Y0EJZq0gD9WjfRJP4CcfR0Sjq6ABaXLtH7eytrUv6659wXNj1pk5HcMNL/gLhoz53a2BOW6eHjOzNbUyn11Mr2ysvf2gbsBTPAcUU26jPiSeuiM+lFku5Rlc8ZjZEacpk9koe/zkozOdZeSaQ3B4bnNRoVWAIWukzMyFKq2e8HKxQcH7a6o6+/8mFImOlgCPczSkRy97h4JNwn4qJH49WulMiBBC/rmG2erR8Qipmt9iQJHQcxmXSbOb162x8imoe9Hw5emJAfR4Q48edfVO2BhcLqB+hvpcHhhwI5ZbX0PUB7CU=
+
+before_install:
+- openssl aes-256-cbc -K $encrypted_7b50f5e46b66_key -iv $encrypted_7b50f5e46b66_iv
+  -in travis/sonatype_signing.asc.enc -out travis/sonatype_signing.asc -d
