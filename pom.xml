@@ -51,7 +51,7 @@
     <java.version>11</java.version>
 
     <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
-    <spring-cloud.version>2.2.2.RELEASE</spring-cloud.version>
+    <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
   </properties>
 
   <dependencyManagement>
@@ -64,25 +64,13 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter</artifactId>
-        <version>${spring-boot.version}</version>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-configuration-processor</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <version>${spring-boot.version}</version>
-      </dependency>
+
       <dependency>
         <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
         <artifactId>httpclient-spring-boot-autoconfigure</artifactId>
@@ -92,16 +80,6 @@
         <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
         <artifactId>httpclient-spring-boot-starter</artifactId>
         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-commons</artifactId>
-        <version>${spring-cloud.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-starter-openfeign</artifactId>
-        <version>${spring-cloud.version}</version>
       </dependency>
 
       <dependency>
@@ -143,7 +121,6 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>${spring-boot.version}</version>
         </plugin>
         <plugin>
           <groupId>external.atlassian.jgitflow</groupId>
