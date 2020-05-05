@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # Only deploy master and develop branch to sonatype
-if [ $TRAVIS_REPO_SLUG == "deveth0/httpclient-spring-boot-starter" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" || "$TRAVIS_BRANCH" == "develop" ] ; then
-
-  if [ $TRAVIS_JDK_VERSION == "openjdk11" ]; then
+if [[ $TRAVIS_REPO_SLUG == "deveth0/httpclient-spring-boot-starter" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]] && [[ "$TRAVIS_BRANCH" == "master" || "$TRAVIS_BRANCH" == "develop" ]]; then
+  if [[ $TRAVIS_JDK_VERSION == "openjdk11" ]]; then
 
     gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import ./travis/signingkey.asc
     gpg2 --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/secring.gpg --no-default-keyring --import ./travis/signingkey.asc
