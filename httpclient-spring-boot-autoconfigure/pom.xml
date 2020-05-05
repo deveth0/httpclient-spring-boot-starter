@@ -8,7 +8,7 @@
   <parent>
     <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
     <artifactId>httpclient.root</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <artifactId>httpclient-spring-boot-autoconfigure</artifactId>
