@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.commons.httpclient.DefaultOkHttpClientFactory;
 
 import de.dev.eth0.springboot.httpclient.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.proxy.OkHttpProxyAuthenticator;
 import okhttp3.OkHttpClient;
 
 /**
@@ -49,5 +50,6 @@ public class ConfigurableOkHttpClientFactory extends DefaultOkHttpClientFactory 
     }
 
     builder.proxySelector(new ConfigurableProxySelector(proxyConfig));
+    builder.proxyAuthenticator(new OkHttpProxyAuthenticator(proxyConfig));
   }
 }

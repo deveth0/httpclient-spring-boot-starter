@@ -42,6 +42,10 @@ public class HttpClientProperties {
 
     private int port = DEFAULT_PORT;
 
+    private String proxyUser;
+
+    private String proxyPassword;
+
     public Pattern[] getHostPatterns() {
       return hostPatterns;
     }
@@ -64,6 +68,22 @@ public class HttpClientProperties {
 
     public void setPort(int port) {
       this.port = port;
+    }
+
+    public String getProxyUser() {
+      return proxyUser;
+    }
+
+    public void setProxyUser(String proxyUser) {
+      this.proxyUser = proxyUser;
+    }
+
+    public String getProxyPassword() {
+      return proxyPassword;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+      this.proxyPassword = proxyPassword;
     }
   }
 

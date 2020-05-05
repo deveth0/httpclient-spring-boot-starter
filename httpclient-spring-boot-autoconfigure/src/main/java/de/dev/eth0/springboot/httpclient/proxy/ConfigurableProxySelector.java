@@ -26,7 +26,7 @@ public class ConfigurableProxySelector extends ProxySelector {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurableProxySelector.class);
 
-  private List<HttpClientProperties.ProxyConfiguration> proxyConfigurations;
+  private final List<HttpClientProperties.ProxyConfiguration> proxyConfigurations;
 
   public ConfigurableProxySelector(HttpClientProperties.ProxyConfiguration[] proxyConfigurations) {
     super();
@@ -37,6 +37,7 @@ public class ConfigurableProxySelector extends ProxySelector {
   public List<Proxy> select(URI uri) {
     List<Proxy> proxies = proxyConfigurations.stream()
         .filter(config -> matches(config, uri.getHost()))
+        //TODO: no need to do this on-demand, this can happen in constructor
         .map(config -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getHost(), config.getPort())))
         .collect(Collectors.collectingAndThen(
             Collectors.toList(),

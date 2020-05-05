@@ -49,6 +49,8 @@ It's possible to configure the proxy based on the requested hostnames using the 
 | proxies[].hostPatterns | Pattern for matching the hostname, empty matches all  | | `google.*`  |
 | proxies[].host | Hostname or IP of the Proxy | | `10.0.9.1` or `corp-proxy.domain` |
 | proxies[].port | Port of the Proxy (optional) | 3128 | |
+| proxies[].proxyUser | Proxy user name (optional) | | `testUser`|
+| proxies[].proxyPassword | Proxy password (optional) | | `testPassword` |
 
 Example:
 ```
@@ -58,6 +60,8 @@ http:
       - hostPatterns: ["google.de]
         host: localhost
         port: 3333
+        proxyUser: testUser
+        proxyPassword: testPassword
 
     timeouts:
       connectionTimeout: 5000

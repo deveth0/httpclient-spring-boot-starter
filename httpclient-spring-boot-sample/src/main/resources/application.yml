@@ -22,8 +22,10 @@ http:
   client:
     proxies:
       - hostPatterns: []
-        host: localhost
+        host: 10.0.9.115
         port: 3128
+        proxyUser: test
+        proxyPassword: test
 
     timeouts:
       connectionTimeout: 5000
