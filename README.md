@@ -44,8 +44,8 @@ It's possible to configure the proxy based on the requested hostnames using the 
 
 | Config | Description | Default | Example | 
 |---|---|---|---|
-| timeouts.connectionTimeout  |   | 5000 |  |
-| timeouts.socketTimeout  |   | 10000  |
+| timeouts.connectionTimeout  | Connection Timeout in ms  | 5000 |  |
+| timeouts.socketTimeout  |  Socket Timeout in ms, for OkHttp this is used as readTimeout and writeTimeout | 10000  |
 | proxies[].hostPatterns | Pattern for matching the hostname, empty matches all  | | `google.*`  |
 | proxies[].host | Hostname or IP of the Proxy | | `10.0.9.1` or `corp-proxy.domain` |
 | proxies[].port | Port of the Proxy (optional) | 3128 | |
