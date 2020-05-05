@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -28,11 +29,14 @@ public class OkHttpProxyAuthenticator implements Authenticator {
   private final Map<Proxy, HttpClientProperties.ProxyConfiguration> proxyConfigurations;
 
   public OkHttpProxyAuthenticator(HttpClientProperties.ProxyConfiguration[] proxyConfig) {
-    this.proxyConfigurations = Arrays.stream(proxyConfig)
-        .filter(proxyConfiguration -> !StringUtils.isEmpty(proxyConfiguration.getProxyUser()) && !StringUtils.isEmpty(proxyConfiguration.getProxyPassword()))
+    this.proxyConfigurations = proxyConfig != null
+        ? Arrays.stream(proxyConfig)
+        .filter(
+            proxyConfiguration -> !StringUtils.isEmpty(proxyConfiguration.getProxyUser()) && !StringUtils.isEmpty(proxyConfiguration.getProxyPassword()))
         .collect(Collectors.toMap(
             proxyConfiguration -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyConfiguration.getHost(), proxyConfiguration.getPort())),
-            Function.identity()));
+            Function.identity()))
+        : new HashMap<>();
   }
 
   @Override

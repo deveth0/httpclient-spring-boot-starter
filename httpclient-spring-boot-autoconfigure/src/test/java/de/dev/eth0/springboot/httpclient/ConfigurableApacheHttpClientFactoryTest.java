@@ -7,9 +7,13 @@ package de.dev.eth0.springboot.httpclient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,17 +30,24 @@ public class ConfigurableApacheHttpClientFactoryTest {
   @Mock
   private HttpClientProperties httpClientProperties;
 
-  private HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
+  private final HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
 
-  private HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
+  private final HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
 
-  @Mock
   private HttpClientProperties.ProxyConfiguration proxy;
+  private HttpClientProperties.ProxyConfiguration proxyWithAuth;
 
   @BeforeEach
   public void setup() {
     when(httpClientProperties.getProxies()).thenReturn(proxyConfiguration);
     when(httpClientProperties.getTimeouts()).thenReturn(timeoutConfiguration);
+
+    proxy = new HttpClientProperties.ProxyConfiguration();
+    proxyWithAuth = new HttpClientProperties.ProxyConfiguration();
+    proxyWithAuth.setHost("testProxyHost");
+    proxyWithAuth.setPort(1234);
+    proxyWithAuth.setProxyUser("testUser");
+    proxyWithAuth.setProxyPassword("testPassword");
   }
 
   @Test
@@ -78,5 +89,38 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
     Object proxySelector = ReflectionTestUtils.getField(routePlanner, SystemDefaultRoutePlanner.class, "proxySelector");
     assertThat(proxySelector).isInstanceOf(ConfigurableProxySelector.class);
+  }
+
+  @Test
+  public void createBuilder_proxyConfiguration_noAuthentication() {
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { proxy });
+
+    ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
+    HttpClientBuilder builder = underTest.createBuilder();
+
+    Object credentialsProvider = ReflectionTestUtils.getField(builder, HttpClientBuilder.class, "credentialsProvider");
+    Object proxyAuthStrategy = ReflectionTestUtils.getField(builder, HttpClientBuilder.class, "proxyAuthStrategy");
+    assertThat(credentialsProvider).isNull();
+    assertThat(proxyAuthStrategy).isNull();
+  }
+
+  @Test
+  public void createBuilder_proxyConfiguration_authentication() {
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { proxyWithAuth, proxy });
+
+    ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
+    HttpClientBuilder builder = underTest.createBuilder();
+
+    BasicCredentialsProvider credentialsProvider = (BasicCredentialsProvider)ReflectionTestUtils
+        .getField(builder, HttpClientBuilder.class, "credentialsProvider");
+    assertThat(credentialsProvider).isNotNull();
+
+    Credentials credentials = credentialsProvider.getCredentials(new AuthScope(proxyWithAuth.getHost(), proxyWithAuth.getPort()));
+    assertThat(credentials).isNotNull();
+    assertThat(credentials.getUserPrincipal().getName()).isEqualTo(proxyWithAuth.getProxyUser());
+    assertThat(credentials.getPassword()).isEqualTo(proxyWithAuth.getProxyPassword());
+
+    Object proxyAuthStrategy = ReflectionTestUtils.getField(builder, HttpClientBuilder.class, "proxyAuthStrategy");
+    assertThat(proxyAuthStrategy).isInstanceOf(ProxyAuthenticationStrategy.class);
   }
 }
