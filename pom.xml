@@ -13,11 +13,10 @@
   </parent>
 
   <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
-  <artifactId>httpclient.root</artifactId>
+  <artifactId>httpclient-spring-boot-root</artifactId>
   <version>1.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>httpclient-spring-boot-starter.root</name>
   <description>Configuration for the HttpClient for Spring Boot</description>
   <url>https://github.com/deveth0/httpclient-spring-boot-starter</url>
   <inceptionYear>2020</inceptionYear>
