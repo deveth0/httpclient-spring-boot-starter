@@ -7,8 +7,9 @@
 
   <parent>
     <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
-    <artifactId>httpclient.root</artifactId>
+    <artifactId>httpclient-spring-boot-parent</artifactId>
     <version>1.0.2-SNAPSHOT</version>
+    <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>httpclient-spring-boot-autoconfigure</artifactId>
