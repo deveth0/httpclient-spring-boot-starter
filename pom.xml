@@ -26,7 +26,7 @@
   <modules>
     <module>httpclient-spring-boot-autoconfigure</module>
     <module>httpclient-spring-boot-starter</module>
-    <module>httpclient-spring-boot-samples</module>
+    <module>httpclient-spring-boot-sample</module>
   </modules>
 
   <scm>
