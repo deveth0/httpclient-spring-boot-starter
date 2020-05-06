@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ public class ConfigurableProxySelector extends ProxySelector {
   @Override
   public List<Proxy> select(URI uri) {
     List<Proxy> proxies = this.hostConfigurationSelector.select(uri.getHost())
+        .filter(config -> StringUtils.isNoneBlank(config.getProxyHost()))
         .map(config -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getProxyHost(), config.getProxyPort())))
         .collect(Collectors.collectingAndThen(
             Collectors.toList(),

@@ -4,6 +4,7 @@
 
 package de.dev.eth0.springboot.httpclient.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -15,7 +16,6 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.commons.httpclient.DefaultApacheHttpClientFactory;
-import org.springframework.util.StringUtils;
 
 import de.dev.eth0.springboot.httpclient.HttpClientProperties;
 import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
@@ -38,7 +38,15 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
   public HttpClientBuilder createBuilder() {
     HttpClientBuilder builder = super.createBuilder();
     configureTimeouts(builder);
-    configureProxies(builder);
+
+    HttpClientProperties.HostConfiguration[] hostConfigs = httpClientProperties.getHosts();
+
+    if (hostConfigs == null || hostConfigs.length == 0) {
+      LOG.debug("No host configurations found");
+      return builder;
+    }
+    configureProxies(builder, hostConfigs);
+    configureAuthentication(builder, hostConfigs);
     return builder;
   }
 
@@ -49,33 +57,27 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
         .build());
   }
 
-  private void configureProxies(HttpClientBuilder builder) {
-    HttpClientProperties.HostConfiguration[] hostConfigs = httpClientProperties.getHosts();
-
-    if (hostConfigs == null || hostConfigs.length == 0) {
-      LOG.debug("No proxy configurations found");
-      return;
-    }
+  private void configureProxies(HttpClientBuilder builder, HttpClientProperties.HostConfiguration[] hostConfigs) {
 
     ConfigurableProxySelector proxySelector = new ConfigurableProxySelector(hostConfigs);
     SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(proxySelector);
     builder.setRoutePlanner(routePlanner);
 
-    configureProxyAuthentication(builder, hostConfigs);
   }
 
-  private void configureProxyAuthentication(HttpClientBuilder builder, HttpClientProperties.HostConfiguration[] hostConfigs) {
+  private void configureAuthentication(HttpClientBuilder builder, HttpClientProperties.HostConfiguration[] hostConfigs) {
     CredentialsProvider credsProvider = new BasicCredentialsProvider();
-    boolean hasProxyCredentials = false;
+    boolean hasCredentials = false;
     for (HttpClientProperties.HostConfiguration hostConfig : hostConfigs) {
-      if (!StringUtils.isEmpty(hostConfig.getProxyUser()) && !StringUtils.isEmpty(hostConfig.getProxyPassword())) {
+      if (StringUtils.isNoneBlank(hostConfig.getProxyUser(), hostConfig.getProxyPassword())) {
         credsProvider.setCredentials(
             new AuthScope(hostConfig.getProxyHost(), hostConfig.getProxyPort()),
             new UsernamePasswordCredentials(hostConfig.getProxyUser(), hostConfig.getProxyPassword()));
-        hasProxyCredentials = true;
+        hasCredentials = true;
       }
+
     }
-    if (hasProxyCredentials) {
+    if (hasCredentials) {
       builder.setDefaultCredentialsProvider(credsProvider);
       builder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
     }

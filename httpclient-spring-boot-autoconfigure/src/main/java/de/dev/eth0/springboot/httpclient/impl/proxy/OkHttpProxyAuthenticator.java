@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.dev.eth0.springboot.httpclient.HttpClientProperties;
 import okhttp3.Authenticator;
@@ -31,7 +31,7 @@ public class OkHttpProxyAuthenticator implements Authenticator {
     this.proxyConfigurations = proxyConfig != null
         ? Arrays.stream(proxyConfig)
         .filter(
-            proxyConfiguration -> !StringUtils.isEmpty(proxyConfiguration.getProxyUser()) && !StringUtils.isEmpty(proxyConfiguration.getProxyPassword()))
+            proxyConfiguration -> StringUtils.isNoneBlank(proxyConfiguration.getProxyUser(), proxyConfiguration.getProxyPassword()))
         .collect(Collectors.toMap(
             proxyConfiguration -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyConfiguration.getProxyHost(), proxyConfiguration.getProxyPort())),
             Function.identity()))
