@@ -8,11 +8,12 @@
   <parent>
     <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
     <artifactId>httpclient-spring-boot-root</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
   </parent>
 
   <artifactId>httpclient-spring-boot-samples</artifactId>
-
+  <packaging>jar</packaging>
+  
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
