@@ -2,7 +2,7 @@
  * Copyright (c) 2020. dev-eth0.de All rights reserved.
  */
 
-package de.dev.eth0.springboot.httpclient.proxy;
+package de.dev.eth0.springboot.httpclient.impl.proxy;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,18 +27,19 @@ public class ConfigurableProxySelector extends ProxySelector {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurableProxySelector.class);
 
-  private List<HttpClientProperties.ProxyConfiguration> proxyConfigurations;
+  private final ProxyConfigurationSelector proxyConfigurationSelector;
+
 
   public ConfigurableProxySelector(HttpClientProperties.ProxyConfiguration[] proxyConfigurations) {
     super();
-    this.proxyConfigurations = Arrays.asList(proxyConfigurations);
+    this.proxyConfigurationSelector = new ProxyConfigurationSelector(Arrays.asList(proxyConfigurations));
   }
 
   @Override
   public List<Proxy> select(URI uri) {
-    List<Proxy> proxies = proxyConfigurations.stream()
-        .filter(config -> matches(config, uri.getHost()))
-        .map(config -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getHost(), config.getPort())))
+    List<Proxy> proxies = this.proxyConfigurationSelector.select(uri.getHost())
+        .filter(config -> StringUtils.isNoneBlank(config.getProxyHost()))
+        .map(config -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getProxyHost(), config.getProxyPort())))
         .collect(Collectors.collectingAndThen(
             Collectors.toList(),
             proxyList -> proxyList.isEmpty() ? Collections.singletonList(Proxy.NO_PROXY) : proxyList
@@ -45,14 +47,6 @@ public class ConfigurableProxySelector extends ProxySelector {
     LOG.debug("Matching proxies: {}", proxies);
     return proxies;
   }
-
-  private boolean matches(HttpClientProperties.ProxyConfiguration config, String host) {
-    if (config.getHostPatterns().length == 0) {
-      return true;
-    }
-    return Arrays.stream(config.getHostPatterns()).anyMatch(pattern -> pattern.matcher(host).matches());
-  }
-
 
   @Override
   public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {

@@ -38,9 +38,13 @@ public class HttpClientProperties {
     private Pattern[] hostPatterns;
 
     @NotBlank
-    private String host;
+    private String proxyHost;
 
-    private int port = DEFAULT_PORT;
+    private int proxyPort = DEFAULT_PORT;
+
+    private String proxyUser;
+
+    private String proxyPassword;
 
     public Pattern[] getHostPatterns() {
       return hostPatterns;
@@ -50,20 +54,36 @@ public class HttpClientProperties {
       this.hostPatterns = Arrays.stream(hostPatterns).map(Pattern::compile).toArray(Pattern[]::new);
     }
 
-    public String getHost() {
-      return host;
+    public String getProxyHost() {
+      return proxyHost;
     }
 
-    public void setHost(String host) {
-      this.host = host;
+    public void setProxyHost(String proxyHost) {
+      this.proxyHost = proxyHost;
     }
 
-    public int getPort() {
-      return port;
+    public int getProxyPort() {
+      return proxyPort;
     }
 
-    public void setPort(int port) {
-      this.port = port;
+    public void setProxyPort(int proxyPort) {
+      this.proxyPort = proxyPort;
+    }
+
+    public String getProxyUser() {
+      return proxyUser;
+    }
+
+    public void setProxyUser(String proxyUser) {
+      this.proxyUser = proxyUser;
+    }
+
+    public String getProxyPassword() {
+      return proxyPassword;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+      this.proxyPassword = proxyPassword;
     }
   }
 

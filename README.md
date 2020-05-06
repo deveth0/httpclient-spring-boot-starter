@@ -46,9 +46,11 @@ It's possible to configure the proxy based on the requested hostnames using the 
 |---|---|---|---|
 | timeouts.connectionTimeout  | Connection Timeout in ms  | 5000 |  |
 | timeouts.socketTimeout  |  Socket Timeout in ms, for OkHttp this is used as readTimeout and writeTimeout | 10000  |
-| proxies[].hostPatterns | Pattern for matching the hostname, empty matches all  | | `google.*`  |
-| proxies[].host | Hostname or IP of the Proxy | | `10.0.9.1` or `corp-proxy.domain` |
-| proxies[].port | Port of the Proxy (optional) | 3128 | |
+| proxies[].hostPatterns | Pattern for matching the hostname, empty matches all  | empty | `google.*`  |
+| proxies[].proxyHost | Hostname or IP of the Proxy | | `10.0.9.1` or `corp-proxy.domain` |
+| proxies[].proxyPort | Port of the Proxy (optional) | 3128 | |
+| proxies[].proxyUser | Proxy user name (optional) | | `testUser`|
+| proxies[].proxyPassword | Proxy password (optional) | | `testPassword` |
 
 Example:
 ```
@@ -56,8 +58,10 @@ http:
   client:
     proxies:
       - hostPatterns: ["google.de]
-        host: localhost
-        port: 3333
+        proxyHost: localhost
+        proxyPort: 3333
+        proxyUser: testUser
+        proxyPassword: testPassword
 
     timeouts:
       connectionTimeout: 5000
@@ -74,4 +78,4 @@ The project includes the `spring-boot-maven-plugin` therefor you can simply run 
 SPRING_PROFILES_ACTIVE=okhttp mvn spring-boot:run
 ```
 
-The folder also contains a `docker-compose.yml` file which starts a local `Squid` proxy to demonstrate the usecase.
+The project also contains a `docker-compose.yml` file which starts a local `Squid` proxy to demonstrate the usecase.

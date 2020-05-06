@@ -7,6 +7,7 @@ package de.dev.eth0.springboot.httpclient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.net.ProxySelector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import de.dev.eth0.springboot.httpclient.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.impl.ConfigurableOkHttpClientFactory;
+import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.impl.proxy.OkHttpProxyAuthenticator;
 import okhttp3.OkHttpClient;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,17 +26,24 @@ class ConfigurableOkHttpClientFactoryTest {
   @Mock
   private HttpClientProperties httpClientProperties;
 
-  private HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
+  private final HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
 
-  private HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
+  private final HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
 
-  @Mock
-  private HttpClientProperties.ProxyConfiguration proxy;
+  private HttpClientProperties.ProxyConfiguration hostConfig;
+  private HttpClientProperties.ProxyConfiguration hostConfigWithAuth;
 
   @BeforeEach
   public void setup() {
     when(httpClientProperties.getTimeouts()).thenReturn(timeoutConfiguration);
     when(httpClientProperties.getProxies()).thenReturn(proxyConfiguration);
+
+    hostConfig = new HttpClientProperties.ProxyConfiguration();
+    hostConfigWithAuth = new HttpClientProperties.ProxyConfiguration();
+    hostConfigWithAuth.setProxyHost("testProxyHost");
+    hostConfigWithAuth.setProxyPort(1234);
+    hostConfigWithAuth.setProxyUser("testUser");
+    hostConfigWithAuth.setProxyPassword("testPassword");
   }
 
   @Test
@@ -64,7 +74,7 @@ class ConfigurableOkHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration() {
-    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { proxy });
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { hostConfig });
 
     ConfigurableOkHttpClientFactory underTest = new ConfigurableOkHttpClientFactory(new OkHttpClient.Builder(), httpClientProperties);
     OkHttpClient.Builder builder = underTest.createBuilder(true);
@@ -73,4 +83,26 @@ class ConfigurableOkHttpClientFactoryTest {
     assertThat(client.proxySelector()).isInstanceOf(ConfigurableProxySelector.class);
   }
 
+
+  @Test
+  public void createBuilder_proxyConfiguration_noAuthentication() {
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { hostConfig });
+
+    ConfigurableOkHttpClientFactory underTest = new ConfigurableOkHttpClientFactory(new OkHttpClient.Builder(), httpClientProperties);
+    OkHttpClient.Builder builder = underTest.createBuilder(true);
+    OkHttpClient client = builder.build();
+
+    assertThat(client.proxyAuthenticator()).isInstanceOf(OkHttpProxyAuthenticator.class);
+  }
+
+  @Test
+  public void createBuilder_proxyConfiguration_authentication() throws IOException {
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { hostConfigWithAuth, hostConfig });
+
+    ConfigurableOkHttpClientFactory underTest = new ConfigurableOkHttpClientFactory(new OkHttpClient.Builder(), httpClientProperties);
+    OkHttpClient.Builder builder = underTest.createBuilder(true);
+    OkHttpClient client = builder.build();
+
+    assertThat(client.proxyAuthenticator()).isInstanceOf(OkHttpProxyAuthenticator.class);
+  }
 }
