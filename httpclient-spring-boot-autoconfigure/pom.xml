@@ -12,6 +12,7 @@
   </parent>
 
   <artifactId>httpclient-spring-boot-autoconfigure</artifactId>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
