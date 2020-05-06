@@ -14,7 +14,7 @@
 
   <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
   <artifactId>httpclient-spring-boot-root</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
   <packaging>pom</packaging>
 
   <description>Configuration for the HttpClient for Spring Boot</description>
