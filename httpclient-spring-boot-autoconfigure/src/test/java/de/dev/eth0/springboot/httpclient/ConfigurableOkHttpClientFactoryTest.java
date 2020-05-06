@@ -15,8 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import de.dev.eth0.springboot.httpclient.proxy.ConfigurableProxySelector;
-import de.dev.eth0.springboot.httpclient.proxy.OkHttpProxyAuthenticator;
+import de.dev.eth0.springboot.httpclient.impl.ConfigurableOkHttpClientFactory;
+import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.impl.proxy.OkHttpProxyAuthenticator;
 import okhttp3.OkHttpClient;
 
 @ExtendWith(MockitoExtension.class)

@@ -2,7 +2,7 @@
  * Copyright (c) 2020. dev-eth0.de All rights reserved.
  */
 
-package de.dev.eth0.springboot.httpclient.proxy;
+package de.dev.eth0.springboot.httpclient.impl.proxy;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;

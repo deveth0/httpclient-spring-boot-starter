@@ -2,7 +2,7 @@
  * Copyright (c) 2020. dev-eth0.de All rights reserved.
  */
 
-package de.dev.eth0.springboot.httpclient.proxy;
+package de.dev.eth0.springboot.httpclient.impl.proxy;
 
 import static okhttp3.Protocol.HTTP_1_1;
 import static org.assertj.core.api.Assertions.assertThat;

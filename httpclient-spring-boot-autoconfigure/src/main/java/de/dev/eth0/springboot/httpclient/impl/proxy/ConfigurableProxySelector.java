@@ -2,7 +2,7 @@
  * Copyright (c) 2020. dev-eth0.de All rights reserved.
  */
 
-package de.dev.eth0.springboot.httpclient.proxy;
+package de.dev.eth0.springboot.httpclient.impl.proxy;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.dev.eth0.springboot.httpclient.HttpClientProperties;
+import de.dev.eth0.springboot.httpclient.impl.host.HostConfigurationSelector;
 
 /**
  * Custom proxy selector
@@ -26,18 +27,17 @@ public class ConfigurableProxySelector extends ProxySelector {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurableProxySelector.class);
 
-  private final List<HttpClientProperties.HostConfiguration> hostConfigurations;
+  private final HostConfigurationSelector hostConfigurationSelector;
+
 
   public ConfigurableProxySelector(HttpClientProperties.HostConfiguration[] hostConfigurations) {
     super();
-    this.hostConfigurations = Arrays.asList(hostConfigurations);
+    this.hostConfigurationSelector = new HostConfigurationSelector(Arrays.asList(hostConfigurations));
   }
 
   @Override
   public List<Proxy> select(URI uri) {
-    List<Proxy> proxies = hostConfigurations.stream()
-        .filter(config -> matches(config, uri.getHost()))
-        //TODO: no need to do this on-demand, this can happen in constructor
+    List<Proxy> proxies = this.hostConfigurationSelector.select(uri.getHost())
         .map(config -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getProxyHost(), config.getProxyPort())))
         .collect(Collectors.collectingAndThen(
             Collectors.toList(),
@@ -46,14 +46,6 @@ public class ConfigurableProxySelector extends ProxySelector {
     LOG.debug("Matching proxies: {}", proxies);
     return proxies;
   }
-
-  private boolean matches(HttpClientProperties.HostConfiguration config, String host) {
-    if (config.getHostPatterns().length == 0) {
-      return true;
-    }
-    return Arrays.stream(config.getHostPatterns()).anyMatch(pattern -> pattern.matcher(host).matches());
-  }
-
 
   @Override
   public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {

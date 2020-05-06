@@ -2,15 +2,16 @@
  * Copyright (c) 2020. dev-eth0.de All rights reserved.
  */
 
-package de.dev.eth0.springboot.httpclient;
+package de.dev.eth0.springboot.httpclient.impl;
 
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.commons.httpclient.DefaultOkHttpClientFactory;
 
-import de.dev.eth0.springboot.httpclient.proxy.ConfigurableProxySelector;
-import de.dev.eth0.springboot.httpclient.proxy.OkHttpProxyAuthenticator;
+import de.dev.eth0.springboot.httpclient.HttpClientProperties;
+import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.impl.proxy.OkHttpProxyAuthenticator;
 import okhttp3.OkHttpClient;
 
 /**

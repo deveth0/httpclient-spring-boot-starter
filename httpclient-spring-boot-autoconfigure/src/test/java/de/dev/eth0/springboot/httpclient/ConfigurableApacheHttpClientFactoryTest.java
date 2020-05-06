@@ -22,7 +22,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import de.dev.eth0.springboot.httpclient.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.impl.ConfigurableApacheHttpClientFactory;
+import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
 
 @ExtendWith(MockitoExtension.class)
 public class ConfigurableApacheHttpClientFactoryTest {

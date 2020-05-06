@@ -2,7 +2,7 @@
  * Copyright (c) 2020. dev-eth0.de All rights reserved.
  */
 
-package de.dev.eth0.springboot.httpclient;
+package de.dev.eth0.springboot.httpclient.impl;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -17,7 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.commons.httpclient.DefaultApacheHttpClientFactory;
 import org.springframework.util.StringUtils;
 
-import de.dev.eth0.springboot.httpclient.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.HttpClientProperties;
+import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
 
 /**
  * Factory used to create a HttpClient Instance
