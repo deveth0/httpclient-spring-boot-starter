@@ -11,6 +11,7 @@ if [[ $TRAVIS_REPO_SLUG == "deveth0/httpclient-spring-boot-starter" ]] && [[ "$T
     echo -e "Pubkeys"
     gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --list-public-keys
 
+    export GPG_TTY=$(tty)
     mvn install deploy -DskipTests=true -Prelease-profile --settings ./travis/maven-settings.xml -Dgpg.executable=gpg2 -Dgpg.keyname=05E8EEC0 -Dgpg.passphrase=$PASSPHRASE -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/pubring.gpg
     echo -e "Successfully deployed to sonatype"
 
