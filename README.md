@@ -5,6 +5,7 @@
 [![Maven central](https://maven-badges.herokuapp.com/maven-central/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter)
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter.svg)](https://oss.sonatype.org/content/repositories/snapshots/de/dev-eth0/spring-boot/httpclient/httpclient-spring-boot-starter/)
 [![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
 This project provides a Spring-Boot Starter that enables the additional configuration of the used Httpclients. 
 
 It supports the configuration of [OkHttp](https://square.github.io/okhttp/) and [Apache HttpClient](https://hc.apache.org/httpcomponents-client-ga/) which are also the supported Clients in Spring.
