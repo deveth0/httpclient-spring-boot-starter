@@ -16,14 +16,14 @@ import org.springframework.validation.annotation.Validated;
 public class HttpClientProperties {
 
   private final TimeoutConfiguration timeouts = new TimeoutConfiguration();
-  private HostConfiguration[] hosts = {};
+  private ProxyConfiguration[] proxies = {};
 
-  public HostConfiguration[] getHosts() {
-    return hosts;
+  public ProxyConfiguration[] getProxies() {
+    return proxies;
   }
 
-  public void setHosts(HostConfiguration[] hosts) {
-    this.hosts = hosts;
+  public void setProxies(ProxyConfiguration[] proxies) {
+    this.proxies = proxies;
   }
 
   public TimeoutConfiguration getTimeouts() {
@@ -31,7 +31,7 @@ public class HttpClientProperties {
   }
 
   @Validated
-  public static class HostConfiguration {
+  public static class ProxyConfiguration {
 
     public static final int DEFAULT_PORT = 3128;
 

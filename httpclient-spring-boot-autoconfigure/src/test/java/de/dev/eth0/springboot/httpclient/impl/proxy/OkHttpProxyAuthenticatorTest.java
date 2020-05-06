@@ -28,8 +28,8 @@ public class OkHttpProxyAuthenticatorTest {
   private Route routeWithAuth;
   private Route routeWithoutAuth;
 
-  private HttpClientProperties.HostConfiguration proxyConfigWithAuth;
-  private HttpClientProperties.HostConfiguration proxyConfigWithoutAuth;
+  private HttpClientProperties.ProxyConfiguration proxyConfigWithAuth;
+  private HttpClientProperties.ProxyConfiguration proxyConfigWithoutAuth;
 
   private OkHttpProxyAuthenticator underTest;
 
@@ -37,17 +37,17 @@ public class OkHttpProxyAuthenticatorTest {
 
   @BeforeEach
   public void setup() {
-    proxyConfigWithAuth = new HttpClientProperties.HostConfiguration();
+    proxyConfigWithAuth = new HttpClientProperties.ProxyConfiguration();
     proxyConfigWithAuth.setProxyHost("testProxyHost");
     proxyConfigWithAuth.setProxyPort(1234);
     proxyConfigWithAuth.setProxyUser("testUser");
     proxyConfigWithAuth.setProxyPassword("testPassword");
 
-    proxyConfigWithoutAuth = new HttpClientProperties.HostConfiguration();
+    proxyConfigWithoutAuth = new HttpClientProperties.ProxyConfiguration();
     proxyConfigWithoutAuth.setProxyHost("anotherProxyHost");
     proxyConfigWithoutAuth.setProxyPort(5678);
 
-    underTest = new OkHttpProxyAuthenticator(new HttpClientProperties.HostConfiguration[] { proxyConfigWithAuth, proxyConfigWithoutAuth });
+    underTest = new OkHttpProxyAuthenticator(new HttpClientProperties.ProxyConfiguration[] { proxyConfigWithAuth, proxyConfigWithoutAuth });
 
     Address address = new Address(
         "server", 443, new FakeDns(), SocketFactory.getDefault(),

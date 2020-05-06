@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.dev.eth0.springboot.httpclient.HttpClientProperties;
-import de.dev.eth0.springboot.httpclient.impl.host.HostConfigurationSelector;
 
 /**
  * Custom proxy selector
@@ -28,17 +27,17 @@ public class ConfigurableProxySelector extends ProxySelector {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurableProxySelector.class);
 
-  private final HostConfigurationSelector hostConfigurationSelector;
+  private final ProxyConfigurationSelector proxyConfigurationSelector;
 
 
-  public ConfigurableProxySelector(HttpClientProperties.HostConfiguration[] hostConfigurations) {
+  public ConfigurableProxySelector(HttpClientProperties.ProxyConfiguration[] proxyConfigurations) {
     super();
-    this.hostConfigurationSelector = new HostConfigurationSelector(Arrays.asList(hostConfigurations));
+    this.proxyConfigurationSelector = new ProxyConfigurationSelector(Arrays.asList(proxyConfigurations));
   }
 
   @Override
   public List<Proxy> select(URI uri) {
-    List<Proxy> proxies = this.hostConfigurationSelector.select(uri.getHost())
+    List<Proxy> proxies = this.proxyConfigurationSelector.select(uri.getHost())
         .filter(config -> StringUtils.isNoneBlank(config.getProxyHost()))
         .map(config -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getProxyHost(), config.getProxyPort())))
         .collect(Collectors.collectingAndThen(

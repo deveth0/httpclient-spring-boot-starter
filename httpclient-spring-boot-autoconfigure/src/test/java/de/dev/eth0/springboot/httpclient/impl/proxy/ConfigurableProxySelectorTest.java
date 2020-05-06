@@ -24,12 +24,12 @@ public class ConfigurableProxySelectorTest {
   private static final String MATCHING_URI = "http://example.com/foo/bar";
   private static final String NON_MATCHING_URI = "http://foobar.com/ipsum";
 
-  private static final HttpClientProperties.HostConfiguration NO_PATTERN_CONFIG = getHostConfiguration("localhost-nopattern", 1337);
-  private static final HttpClientProperties.HostConfiguration WILDCARD_CONFIG = getHostConfiguration("localhost-wildcard", 1337, WILDCARD_HOST_PATTERN);
-  private static final HttpClientProperties.HostConfiguration MATCHING_CONFIG = getHostConfiguration("localhost", 3128, MATCHING_HOST_PATTERN);
-  private static final HttpClientProperties.HostConfiguration NON_MATCHING_CONFIG = getHostConfiguration("localhost-non-matching", 1337,
+  private static final HttpClientProperties.ProxyConfiguration NO_PATTERN_CONFIG = getHostConfiguration("localhost-nopattern", 1337);
+  private static final HttpClientProperties.ProxyConfiguration WILDCARD_CONFIG = getHostConfiguration("localhost-wildcard", 1337, WILDCARD_HOST_PATTERN);
+  private static final HttpClientProperties.ProxyConfiguration MATCHING_CONFIG = getHostConfiguration("localhost", 3128, MATCHING_HOST_PATTERN);
+  private static final HttpClientProperties.ProxyConfiguration NON_MATCHING_CONFIG = getHostConfiguration("localhost-non-matching", 1337,
       NON_MATCHING_HOST_PATTERN);
-  private static final HttpClientProperties.HostConfiguration MULTI_HOSTPATTERN_CONFIG = getHostConfiguration("localhost", 3128,
+  private static final HttpClientProperties.ProxyConfiguration MULTI_HOSTPATTERN_CONFIG = getHostConfiguration("localhost", 3128,
       MATCHING_HOST_PATTERN, "example.de");
 
   private static final Proxy NO_PATTERN_PROXY = new Proxy(Proxy.Type.HTTP,
@@ -37,8 +37,8 @@ public class ConfigurableProxySelectorTest {
   private static final Proxy WILDCARD_PROXY = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(WILDCARD_CONFIG.getProxyHost(), WILDCARD_CONFIG.getProxyPort()));
   private static final Proxy MATCHING_PROXY = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(MATCHING_CONFIG.getProxyHost(), MATCHING_CONFIG.getProxyPort()));
 
-  private static HttpClientProperties.HostConfiguration getHostConfiguration(String proxyHost, int proxyPort, String... pattern) {
-    HttpClientProperties.HostConfiguration config = new HttpClientProperties.HostConfiguration();
+  private static HttpClientProperties.ProxyConfiguration getHostConfiguration(String proxyHost, int proxyPort, String... pattern) {
+    HttpClientProperties.ProxyConfiguration config = new HttpClientProperties.ProxyConfiguration();
     config.setProxyHost(proxyHost);
     config.setProxyPort(proxyPort);
     config.setHostPatterns(pattern);
@@ -51,7 +51,7 @@ public class ConfigurableProxySelectorTest {
    */
   @Test
   public void select_noProxiesConfigured() throws URISyntaxException {
-    HttpClientProperties.HostConfiguration[] proxyConfigs = {};
+    HttpClientProperties.ProxyConfiguration[] proxyConfigs = {};
 
     ConfigurableProxySelector underTest = new ConfigurableProxySelector(proxyConfigs);
 
@@ -61,7 +61,7 @@ public class ConfigurableProxySelectorTest {
 
   @Test
   public void select_noMatching() throws URISyntaxException {
-    HttpClientProperties.HostConfiguration[] proxyConfigs = {
+    HttpClientProperties.ProxyConfiguration[] proxyConfigs = {
         MATCHING_CONFIG,
         NON_MATCHING_CONFIG
     };
@@ -74,7 +74,7 @@ public class ConfigurableProxySelectorTest {
 
   @Test
   public void select_singleMatching() throws URISyntaxException {
-    HttpClientProperties.HostConfiguration[] proxyConfigs = {
+    HttpClientProperties.ProxyConfiguration[] proxyConfigs = {
         MATCHING_CONFIG,
         NON_MATCHING_CONFIG
     };
@@ -89,7 +89,7 @@ public class ConfigurableProxySelectorTest {
 
   @Test
   public void select_singleMatching_multiplePattern() throws URISyntaxException {
-    HttpClientProperties.HostConfiguration[] proxyConfigs = {
+    HttpClientProperties.ProxyConfiguration[] proxyConfigs = {
         MULTI_HOSTPATTERN_CONFIG,
         NON_MATCHING_CONFIG
     };
@@ -111,7 +111,7 @@ public class ConfigurableProxySelectorTest {
 
   @Test
   public void select_singleMatching_noPattern() throws URISyntaxException {
-    HttpClientProperties.HostConfiguration[] proxyConfigs = {
+    HttpClientProperties.ProxyConfiguration[] proxyConfigs = {
         NO_PATTERN_CONFIG,
         NON_MATCHING_CONFIG
     };
@@ -126,7 +126,7 @@ public class ConfigurableProxySelectorTest {
 
   @Test
   public void select_multipleMatching() throws URISyntaxException {
-    HttpClientProperties.HostConfiguration[] proxyConfigs = {
+    HttpClientProperties.ProxyConfiguration[] proxyConfigs = {
         MATCHING_CONFIG,
         WILDCARD_CONFIG,
         NO_PATTERN_CONFIG,

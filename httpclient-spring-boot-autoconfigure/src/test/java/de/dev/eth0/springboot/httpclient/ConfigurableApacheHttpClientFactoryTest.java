@@ -33,18 +33,18 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   private final HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
 
-  private final HttpClientProperties.HostConfiguration[] hostConfiguration = {};
+  private final HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
 
-  private HttpClientProperties.HostConfiguration hostConfig;
-  private HttpClientProperties.HostConfiguration hostConfigWithAuth;
+  private HttpClientProperties.ProxyConfiguration hostConfig;
+  private HttpClientProperties.ProxyConfiguration hostConfigWithAuth;
 
   @BeforeEach
   public void setup() {
-    when(httpClientProperties.getHosts()).thenReturn(hostConfiguration);
+    when(httpClientProperties.getProxies()).thenReturn(proxyConfiguration);
     when(httpClientProperties.getTimeouts()).thenReturn(timeoutConfiguration);
 
-    hostConfig = new HttpClientProperties.HostConfiguration();
-    hostConfigWithAuth = new HttpClientProperties.HostConfiguration();
+    hostConfig = new HttpClientProperties.ProxyConfiguration();
+    hostConfigWithAuth = new HttpClientProperties.ProxyConfiguration();
     hostConfigWithAuth.setProxyHost("testProxyHost");
     hostConfigWithAuth.setProxyPort(1234);
     hostConfigWithAuth.setProxyUser("testUser");
@@ -80,7 +80,7 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration() {
-    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfig });
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { hostConfig });
 
     ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
     HttpClientBuilder builder = underTest.createBuilder();
@@ -94,7 +94,7 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration_noAuthentication() {
-    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfig });
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { hostConfig });
 
     ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
     HttpClientBuilder builder = underTest.createBuilder();
@@ -107,7 +107,7 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration_authentication() {
-    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfigWithAuth, hostConfig });
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { hostConfigWithAuth, hostConfig });
 
     ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
     HttpClientBuilder builder = underTest.createBuilder();

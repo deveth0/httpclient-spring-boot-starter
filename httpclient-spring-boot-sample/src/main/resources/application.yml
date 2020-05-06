@@ -20,7 +20,7 @@ logging:
 
 http:
   client:
-    hosts:
+    proxies:
       # Demo case for a request using a proxy. Make sure, you have one running
       - hostPatterns: ["gturnquist-quoters.cfapps.io"]
         proxyHost: 10.0.9.115

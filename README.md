@@ -46,17 +46,17 @@ It's possible to configure the proxy based on the requested hostnames using the 
 |---|---|---|---|
 | timeouts.connectionTimeout  | Connection Timeout in ms  | 5000 |  |
 | timeouts.socketTimeout  |  Socket Timeout in ms, for OkHttp this is used as readTimeout and writeTimeout | 10000  |
-| hosts[].hostPatterns | Pattern for matching the hostname, empty matches all  | empty | `google.*`  |
-| hosts[].proxyHost | Hostname or IP of the Proxy | | `10.0.9.1` or `corp-proxy.domain` |
-| hosts[].proxyPort | Port of the Proxy (optional) | 3128 | |
-| hosts[].proxyUser | Proxy user name (optional) | | `testUser`|
-| hosts[].proxyPassword | Proxy password (optional) | | `testPassword` |
+| proxies[].hostPatterns | Pattern for matching the hostname, empty matches all  | empty | `google.*`  |
+| proxies[].proxyHost | Hostname or IP of the Proxy | | `10.0.9.1` or `corp-proxy.domain` |
+| proxies[].proxyPort | Port of the Proxy (optional) | 3128 | |
+| proxies[].proxyUser | Proxy user name (optional) | | `testUser`|
+| proxies[].proxyPassword | Proxy password (optional) | | `testPassword` |
 
 Example:
 ```
 http:
   client:
-    hosts:
+    proxies:
       - hostPatterns: ["google.de]
         proxyHost: localhost
         proxyPort: 3333

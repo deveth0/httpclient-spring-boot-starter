@@ -28,18 +28,18 @@ class ConfigurableOkHttpClientFactoryTest {
 
   private final HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
 
-  private final HttpClientProperties.HostConfiguration[] hostConfiguration = {};
+  private final HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
 
-  private HttpClientProperties.HostConfiguration hostConfig;
-  private HttpClientProperties.HostConfiguration hostConfigWithAuth;
+  private HttpClientProperties.ProxyConfiguration hostConfig;
+  private HttpClientProperties.ProxyConfiguration hostConfigWithAuth;
 
   @BeforeEach
   public void setup() {
     when(httpClientProperties.getTimeouts()).thenReturn(timeoutConfiguration);
-    when(httpClientProperties.getHosts()).thenReturn(hostConfiguration);
+    when(httpClientProperties.getProxies()).thenReturn(proxyConfiguration);
 
-    hostConfig = new HttpClientProperties.HostConfiguration();
-    hostConfigWithAuth = new HttpClientProperties.HostConfiguration();
+    hostConfig = new HttpClientProperties.ProxyConfiguration();
+    hostConfigWithAuth = new HttpClientProperties.ProxyConfiguration();
     hostConfigWithAuth.setProxyHost("testProxyHost");
     hostConfigWithAuth.setProxyPort(1234);
     hostConfigWithAuth.setProxyUser("testUser");
@@ -74,7 +74,7 @@ class ConfigurableOkHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration() {
-    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfig });
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { hostConfig });
 
     ConfigurableOkHttpClientFactory underTest = new ConfigurableOkHttpClientFactory(new OkHttpClient.Builder(), httpClientProperties);
     OkHttpClient.Builder builder = underTest.createBuilder(true);
@@ -86,7 +86,7 @@ class ConfigurableOkHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration_noAuthentication() {
-    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfig });
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { hostConfig });
 
     ConfigurableOkHttpClientFactory underTest = new ConfigurableOkHttpClientFactory(new OkHttpClient.Builder(), httpClientProperties);
     OkHttpClient.Builder builder = underTest.createBuilder(true);
@@ -97,7 +97,7 @@ class ConfigurableOkHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration_authentication() throws IOException {
-    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfigWithAuth, hostConfig });
+    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { hostConfigWithAuth, hostConfig });
 
     ConfigurableOkHttpClientFactory underTest = new ConfigurableOkHttpClientFactory(new OkHttpClient.Builder(), httpClientProperties);
     OkHttpClient.Builder builder = underTest.createBuilder(true);

@@ -39,7 +39,7 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
     HttpClientBuilder builder = super.createBuilder();
     configureTimeouts(builder);
 
-    HttpClientProperties.HostConfiguration[] hostConfigs = httpClientProperties.getHosts();
+    HttpClientProperties.ProxyConfiguration[] hostConfigs = httpClientProperties.getProxies();
 
     if (hostConfigs == null || hostConfigs.length == 0) {
       LOG.debug("No host configurations found");
@@ -57,7 +57,7 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
         .build());
   }
 
-  private void configureProxies(HttpClientBuilder builder, HttpClientProperties.HostConfiguration[] hostConfigs) {
+  private void configureProxies(HttpClientBuilder builder, HttpClientProperties.ProxyConfiguration[] hostConfigs) {
 
     ConfigurableProxySelector proxySelector = new ConfigurableProxySelector(hostConfigs);
     SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(proxySelector);
@@ -65,10 +65,10 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
 
   }
 
-  private void configureAuthentication(HttpClientBuilder builder, HttpClientProperties.HostConfiguration[] hostConfigs) {
+  private void configureAuthentication(HttpClientBuilder builder, HttpClientProperties.ProxyConfiguration[] hostConfigs) {
     CredentialsProvider credsProvider = new BasicCredentialsProvider();
     boolean hasCredentials = false;
-    for (HttpClientProperties.HostConfiguration hostConfig : hostConfigs) {
+    for (HttpClientProperties.ProxyConfiguration hostConfig : hostConfigs) {
       if (StringUtils.isNoneBlank(hostConfig.getProxyUser(), hostConfig.getProxyPassword())) {
         credsProvider.setCredentials(
             new AuthScope(hostConfig.getProxyHost(), hostConfig.getProxyPort()),
