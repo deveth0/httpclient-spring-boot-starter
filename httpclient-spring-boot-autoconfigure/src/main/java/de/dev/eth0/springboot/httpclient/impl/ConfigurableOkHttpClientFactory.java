@@ -2,14 +2,16 @@
  * Copyright (c) 2020. dev-eth0.de All rights reserved.
  */
 
-package de.dev.eth0.springboot.httpclient;
+package de.dev.eth0.springboot.httpclient.impl;
 
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.commons.httpclient.DefaultOkHttpClientFactory;
 
-import de.dev.eth0.springboot.httpclient.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.HttpClientProperties;
+import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.impl.proxy.OkHttpProxyAuthenticator;
 import okhttp3.OkHttpClient;
 
 /**
@@ -41,7 +43,7 @@ public class ConfigurableOkHttpClientFactory extends DefaultOkHttpClientFactory 
   }
 
   private void configureProxies(OkHttpClient.Builder builder) {
-    HttpClientProperties.ProxyConfiguration[] proxyConfig = httpClientProperties.getProxies();
+    HttpClientProperties.HostConfiguration[] proxyConfig = httpClientProperties.getHosts();
 
     if (proxyConfig == null || proxyConfig.length == 0) {
       LOG.debug("No proxy configurations found");
@@ -49,5 +51,6 @@ public class ConfigurableOkHttpClientFactory extends DefaultOkHttpClientFactory 
     }
 
     builder.proxySelector(new ConfigurableProxySelector(proxyConfig));
+    builder.proxyAuthenticator(new OkHttpProxyAuthenticator(proxyConfig));
   }
 }

@@ -18,6 +18,8 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 
+import de.dev.eth0.springboot.httpclient.impl.ConfigurableApacheHttpClientFactory;
+import de.dev.eth0.springboot.httpclient.impl.ConfigurableOkHttpClientFactory;
 import okhttp3.OkHttpClient;
 
 public class HttpClientAutoConfigurationTest {

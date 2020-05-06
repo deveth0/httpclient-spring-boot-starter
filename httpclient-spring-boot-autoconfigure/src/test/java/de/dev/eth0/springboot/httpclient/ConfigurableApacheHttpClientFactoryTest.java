@@ -7,9 +7,13 @@ package de.dev.eth0.springboot.httpclient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +22,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import de.dev.eth0.springboot.httpclient.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.impl.ConfigurableApacheHttpClientFactory;
+import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
 
 @ExtendWith(MockitoExtension.class)
 public class ConfigurableApacheHttpClientFactoryTest {
@@ -26,17 +31,24 @@ public class ConfigurableApacheHttpClientFactoryTest {
   @Mock
   private HttpClientProperties httpClientProperties;
 
-  private HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
+  private final HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
 
-  private HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
+  private final HttpClientProperties.HostConfiguration[] hostConfiguration = {};
 
-  @Mock
-  private HttpClientProperties.ProxyConfiguration proxy;
+  private HttpClientProperties.HostConfiguration hostConfig;
+  private HttpClientProperties.HostConfiguration hostConfigWithAuth;
 
   @BeforeEach
   public void setup() {
-    when(httpClientProperties.getProxies()).thenReturn(proxyConfiguration);
+    when(httpClientProperties.getHosts()).thenReturn(hostConfiguration);
     when(httpClientProperties.getTimeouts()).thenReturn(timeoutConfiguration);
+
+    hostConfig = new HttpClientProperties.HostConfiguration();
+    hostConfigWithAuth = new HttpClientProperties.HostConfiguration();
+    hostConfigWithAuth.setProxyHost("testProxyHost");
+    hostConfigWithAuth.setProxyPort(1234);
+    hostConfigWithAuth.setProxyUser("testUser");
+    hostConfigWithAuth.setProxyPassword("testPassword");
   }
 
   @Test
@@ -68,7 +80,7 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration() {
-    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { proxy });
+    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfig });
 
     ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
     HttpClientBuilder builder = underTest.createBuilder();
@@ -78,5 +90,38 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
     Object proxySelector = ReflectionTestUtils.getField(routePlanner, SystemDefaultRoutePlanner.class, "proxySelector");
     assertThat(proxySelector).isInstanceOf(ConfigurableProxySelector.class);
+  }
+
+  @Test
+  public void createBuilder_proxyConfiguration_noAuthentication() {
+    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfig });
+
+    ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
+    HttpClientBuilder builder = underTest.createBuilder();
+
+    Object credentialsProvider = ReflectionTestUtils.getField(builder, HttpClientBuilder.class, "credentialsProvider");
+    Object proxyAuthStrategy = ReflectionTestUtils.getField(builder, HttpClientBuilder.class, "proxyAuthStrategy");
+    assertThat(credentialsProvider).isNull();
+    assertThat(proxyAuthStrategy).isNull();
+  }
+
+  @Test
+  public void createBuilder_proxyConfiguration_authentication() {
+    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfigWithAuth, hostConfig });
+
+    ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
+    HttpClientBuilder builder = underTest.createBuilder();
+
+    BasicCredentialsProvider credentialsProvider = (BasicCredentialsProvider)ReflectionTestUtils
+        .getField(builder, HttpClientBuilder.class, "credentialsProvider");
+    assertThat(credentialsProvider).isNotNull();
+
+    Credentials credentials = credentialsProvider.getCredentials(new AuthScope(hostConfigWithAuth.getProxyHost(), hostConfigWithAuth.getProxyPort()));
+    assertThat(credentials).isNotNull();
+    assertThat(credentials.getUserPrincipal().getName()).isEqualTo(hostConfigWithAuth.getProxyUser());
+    assertThat(credentials.getPassword()).isEqualTo(hostConfigWithAuth.getProxyPassword());
+
+    Object proxyAuthStrategy = ReflectionTestUtils.getField(builder, HttpClientBuilder.class, "proxyAuthStrategy");
+    assertThat(proxyAuthStrategy).isInstanceOf(ProxyAuthenticationStrategy.class);
   }
 }
