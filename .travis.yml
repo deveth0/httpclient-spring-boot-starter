@@ -3,8 +3,17 @@ language: java
 
 jdk:
 - openjdk11
+- openjdk-ea
+
+matrix:
+  allow_failures:
+  - jdk: openjdk-ea
 
 script:
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+- mvn test jacoco:report coveralls:report
+
+after_success:
   - chmod -R 777 ./travis/after_success.sh
   - ./travis/after_success.sh
 
@@ -15,4 +24,5 @@ env:
   - secure: AhiCe6O7DEW9BAWTp4jXF9udcJrpbKKGCVQM/P8E34M6nqBQt+DOkjjoVo+5cigAdBWr8bMdyy8SQBmjAbKIyqbd5pYw8FX4iJ1YEgwa2aqwSbHhrD7xfZAbHTH9M+bjctQE0aceLLq2iiqTrkvDP8fDxPLvle3cYK3ud3exhXICHe+KSjgRekVFNFawEKR3Oht4NUWRqkjpTo9cOcH/VRVmGGg5c7yvGMGK8vfSxuUxn1Ug694IuOTtfjA+8T8ncqJXxe5VUtgf8zT6OkmViAEvQFtbIhCpds2s4pl5XamCFZwzT70mRjmslkVfWFabY4KrV45R/Rc6WQ5kFc1I0TXaJT4BPLmmV9GBu5fAZssCJ3LVdJLLj3A+8b5Y0EJZq0gD9WjfRJP4CcfR0Sjq6ABaXLtH7eytrUv6659wXNj1pk5HcMNL/gLhoz53a2BOW6eHjOzNbUyn11Mr2ysvf2gbsBTPAcUU26jPiSeuiM+lFku5Rlc8ZjZEacpk9koe/zkozOdZeSaQ3B4bnNRoVWAIWukzMyFKq2e8HKxQcH7a6o6+/8mFImOlgCPczSkRy97h4JNwn4qJH49WulMiBBC/rmG2erR8Qipmt9iQJHQcxmXSbOb162x8imoe9Hw5emJAfR4Q48edfVO2BhcLqB+hvpcHhhwI5ZbX0PUB7CU=
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_7b50f5e46b66_key -iv $encrypted_7b50f5e46b66_iv -in travis/sonatype_signing.asc.enc -out travis/sonatype_signing.asc -d
+- openssl aes-256-cbc -K $encrypted_7b50f5e46b66_key -iv $encrypted_7b50f5e46b66_iv
+  -in travis/sonatype_signing.asc.enc -out travis/sonatype_signing.asc -d
