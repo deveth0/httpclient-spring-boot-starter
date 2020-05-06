@@ -42,7 +42,7 @@ public class ConfigurableOkHttpClientFactory extends DefaultOkHttpClientFactory 
   }
 
   private void configureProxies(OkHttpClient.Builder builder) {
-    HttpClientProperties.ProxyConfiguration[] proxyConfig = httpClientProperties.getProxies();
+    HttpClientProperties.HostConfiguration[] proxyConfig = httpClientProperties.getHosts();
 
     if (proxyConfig == null || proxyConfig.length == 0) {
       LOG.debug("No proxy configurations found");

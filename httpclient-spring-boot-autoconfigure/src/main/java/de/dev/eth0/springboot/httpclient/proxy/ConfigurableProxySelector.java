@@ -26,19 +26,19 @@ public class ConfigurableProxySelector extends ProxySelector {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurableProxySelector.class);
 
-  private final List<HttpClientProperties.ProxyConfiguration> proxyConfigurations;
+  private final List<HttpClientProperties.HostConfiguration> hostConfigurations;
 
-  public ConfigurableProxySelector(HttpClientProperties.ProxyConfiguration[] proxyConfigurations) {
+  public ConfigurableProxySelector(HttpClientProperties.HostConfiguration[] hostConfigurations) {
     super();
-    this.proxyConfigurations = Arrays.asList(proxyConfigurations);
+    this.hostConfigurations = Arrays.asList(hostConfigurations);
   }
 
   @Override
   public List<Proxy> select(URI uri) {
-    List<Proxy> proxies = proxyConfigurations.stream()
+    List<Proxy> proxies = hostConfigurations.stream()
         .filter(config -> matches(config, uri.getHost()))
         //TODO: no need to do this on-demand, this can happen in constructor
-        .map(config -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getHost(), config.getPort())))
+        .map(config -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getProxyHost(), config.getProxyPort())))
         .collect(Collectors.collectingAndThen(
             Collectors.toList(),
             proxyList -> proxyList.isEmpty() ? Collections.singletonList(Proxy.NO_PROXY) : proxyList
@@ -47,7 +47,7 @@ public class ConfigurableProxySelector extends ProxySelector {
     return proxies;
   }
 
-  private boolean matches(HttpClientProperties.ProxyConfiguration config, String host) {
+  private boolean matches(HttpClientProperties.HostConfiguration config, String host) {
     if (config.getHostPatterns().length == 0) {
       return true;
     }

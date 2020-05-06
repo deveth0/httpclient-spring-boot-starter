@@ -28,8 +28,8 @@ public class OkHttpProxyAuthenticatorTest {
   private Route routeWithAuth;
   private Route routeWithoutAuth;
 
-  private HttpClientProperties.ProxyConfiguration proxyConfigWithAuth;
-  private HttpClientProperties.ProxyConfiguration proxyConfigWithoutAuth;
+  private HttpClientProperties.HostConfiguration proxyConfigWithAuth;
+  private HttpClientProperties.HostConfiguration proxyConfigWithoutAuth;
 
   private OkHttpProxyAuthenticator underTest;
 
@@ -37,26 +37,26 @@ public class OkHttpProxyAuthenticatorTest {
 
   @BeforeEach
   public void setup() {
-    proxyConfigWithAuth = new HttpClientProperties.ProxyConfiguration();
-    proxyConfigWithAuth.setHost("testProxyHost");
-    proxyConfigWithAuth.setPort(1234);
+    proxyConfigWithAuth = new HttpClientProperties.HostConfiguration();
+    proxyConfigWithAuth.setProxyHost("testProxyHost");
+    proxyConfigWithAuth.setProxyPort(1234);
     proxyConfigWithAuth.setProxyUser("testUser");
     proxyConfigWithAuth.setProxyPassword("testPassword");
 
-    proxyConfigWithoutAuth = new HttpClientProperties.ProxyConfiguration();
-    proxyConfigWithoutAuth.setHost("anotherProxyHost");
-    proxyConfigWithoutAuth.setPort(5678);
+    proxyConfigWithoutAuth = new HttpClientProperties.HostConfiguration();
+    proxyConfigWithoutAuth.setProxyHost("anotherProxyHost");
+    proxyConfigWithoutAuth.setProxyPort(5678);
 
-    underTest = new OkHttpProxyAuthenticator(new HttpClientProperties.ProxyConfiguration[] { proxyConfigWithAuth, proxyConfigWithoutAuth });
+    underTest = new OkHttpProxyAuthenticator(new HttpClientProperties.HostConfiguration[] { proxyConfigWithAuth, proxyConfigWithoutAuth });
 
     Address address = new Address(
         "server", 443, new FakeDns(), SocketFactory.getDefault(),
         null, null, null, okhttp3.Authenticator.NONE, null, List.of(HTTP_1_1), List.of(), new NullProxySelector());
     routeWithAuth = new Route(address,
-        new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyConfigWithAuth.getHost(), proxyConfigWithAuth.getPort())),
+        new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyConfigWithAuth.getProxyHost(), proxyConfigWithAuth.getProxyPort())),
         InetSocketAddress.createUnresolved("example.com", 443));
     routeWithoutAuth = new Route(address,
-        new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyConfigWithoutAuth.getHost(), proxyConfigWithoutAuth.getPort())),
+        new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyConfigWithoutAuth.getProxyHost(), proxyConfigWithoutAuth.getProxyPort())),
         InetSocketAddress.createUnresolved("example.com", 443));
 
     responseBuilder = new Response.Builder().code(407)

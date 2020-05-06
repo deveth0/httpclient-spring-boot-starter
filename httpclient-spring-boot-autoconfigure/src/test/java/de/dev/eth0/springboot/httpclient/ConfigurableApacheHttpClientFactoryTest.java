@@ -32,22 +32,22 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   private final HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
 
-  private final HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
+  private final HttpClientProperties.HostConfiguration[] hostConfiguration = {};
 
-  private HttpClientProperties.ProxyConfiguration proxy;
-  private HttpClientProperties.ProxyConfiguration proxyWithAuth;
+  private HttpClientProperties.HostConfiguration hostConfig;
+  private HttpClientProperties.HostConfiguration hostConfigWithAuth;
 
   @BeforeEach
   public void setup() {
-    when(httpClientProperties.getProxies()).thenReturn(proxyConfiguration);
+    when(httpClientProperties.getHosts()).thenReturn(hostConfiguration);
     when(httpClientProperties.getTimeouts()).thenReturn(timeoutConfiguration);
 
-    proxy = new HttpClientProperties.ProxyConfiguration();
-    proxyWithAuth = new HttpClientProperties.ProxyConfiguration();
-    proxyWithAuth.setHost("testProxyHost");
-    proxyWithAuth.setPort(1234);
-    proxyWithAuth.setProxyUser("testUser");
-    proxyWithAuth.setProxyPassword("testPassword");
+    hostConfig = new HttpClientProperties.HostConfiguration();
+    hostConfigWithAuth = new HttpClientProperties.HostConfiguration();
+    hostConfigWithAuth.setProxyHost("testProxyHost");
+    hostConfigWithAuth.setProxyPort(1234);
+    hostConfigWithAuth.setProxyUser("testUser");
+    hostConfigWithAuth.setProxyPassword("testPassword");
   }
 
   @Test
@@ -79,7 +79,7 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration() {
-    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { proxy });
+    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfig });
 
     ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
     HttpClientBuilder builder = underTest.createBuilder();
@@ -93,7 +93,7 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration_noAuthentication() {
-    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { proxy });
+    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfig });
 
     ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
     HttpClientBuilder builder = underTest.createBuilder();
@@ -106,7 +106,7 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   @Test
   public void createBuilder_proxyConfiguration_authentication() {
-    when(httpClientProperties.getProxies()).thenReturn(new HttpClientProperties.ProxyConfiguration[] { proxyWithAuth, proxy });
+    when(httpClientProperties.getHosts()).thenReturn(new HttpClientProperties.HostConfiguration[] { hostConfigWithAuth, hostConfig });
 
     ConfigurableApacheHttpClientFactory underTest = new ConfigurableApacheHttpClientFactory(HttpClientBuilder.create(), httpClientProperties);
     HttpClientBuilder builder = underTest.createBuilder();
@@ -115,10 +115,10 @@ public class ConfigurableApacheHttpClientFactoryTest {
         .getField(builder, HttpClientBuilder.class, "credentialsProvider");
     assertThat(credentialsProvider).isNotNull();
 
-    Credentials credentials = credentialsProvider.getCredentials(new AuthScope(proxyWithAuth.getHost(), proxyWithAuth.getPort()));
+    Credentials credentials = credentialsProvider.getCredentials(new AuthScope(hostConfigWithAuth.getProxyHost(), hostConfigWithAuth.getProxyPort()));
     assertThat(credentials).isNotNull();
-    assertThat(credentials.getUserPrincipal().getName()).isEqualTo(proxyWithAuth.getProxyUser());
-    assertThat(credentials.getPassword()).isEqualTo(proxyWithAuth.getProxyPassword());
+    assertThat(credentials.getUserPrincipal().getName()).isEqualTo(hostConfigWithAuth.getProxyUser());
+    assertThat(credentials.getPassword()).isEqualTo(hostConfigWithAuth.getProxyPassword());
 
     Object proxyAuthStrategy = ReflectionTestUtils.getField(builder, HttpClientBuilder.class, "proxyAuthStrategy");
     assertThat(proxyAuthStrategy).isInstanceOf(ProxyAuthenticationStrategy.class);

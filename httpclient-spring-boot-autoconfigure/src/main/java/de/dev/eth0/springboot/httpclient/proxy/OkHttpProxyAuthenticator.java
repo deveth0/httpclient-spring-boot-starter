@@ -25,15 +25,15 @@ import okhttp3.Route;
  */
 public class OkHttpProxyAuthenticator implements Authenticator {
 
-  private final Map<Proxy, HttpClientProperties.ProxyConfiguration> proxyConfigurations;
+  private final Map<Proxy, HttpClientProperties.HostConfiguration> proxyConfigurations;
 
-  public OkHttpProxyAuthenticator(HttpClientProperties.ProxyConfiguration[] proxyConfig) {
+  public OkHttpProxyAuthenticator(HttpClientProperties.HostConfiguration[] proxyConfig) {
     this.proxyConfigurations = proxyConfig != null
         ? Arrays.stream(proxyConfig)
         .filter(
             proxyConfiguration -> !StringUtils.isEmpty(proxyConfiguration.getProxyUser()) && !StringUtils.isEmpty(proxyConfiguration.getProxyPassword()))
         .collect(Collectors.toMap(
-            proxyConfiguration -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyConfiguration.getHost(), proxyConfiguration.getPort())),
+            proxyConfiguration -> new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyConfiguration.getProxyHost(), proxyConfiguration.getProxyPort())),
             Function.identity()))
         : new HashMap<>();
   }
@@ -47,7 +47,7 @@ public class OkHttpProxyAuthenticator implements Authenticator {
       // Give up, we already failed to authenticate
       return null;
     }
-    HttpClientProperties.ProxyConfiguration matchingConfig = this.proxyConfigurations.get(route.proxy());
+    HttpClientProperties.HostConfiguration matchingConfig = this.proxyConfigurations.get(route.proxy());
     if (matchingConfig != null) {
       String credential = Credentials.basic(matchingConfig.getProxyUser(), matchingConfig.getProxyPassword());
       return response.request().newBuilder()

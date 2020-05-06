@@ -49,28 +49,28 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
   }
 
   private void configureProxies(HttpClientBuilder builder) {
-    HttpClientProperties.ProxyConfiguration[] proxyConfigs = httpClientProperties.getProxies();
+    HttpClientProperties.HostConfiguration[] hostConfigs = httpClientProperties.getHosts();
 
-    if (proxyConfigs == null || proxyConfigs.length == 0) {
+    if (hostConfigs == null || hostConfigs.length == 0) {
       LOG.debug("No proxy configurations found");
       return;
     }
 
-    ConfigurableProxySelector proxySelector = new ConfigurableProxySelector(proxyConfigs);
+    ConfigurableProxySelector proxySelector = new ConfigurableProxySelector(hostConfigs);
     SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(proxySelector);
     builder.setRoutePlanner(routePlanner);
 
-    configureProxyAuthentication(builder, proxyConfigs);
+    configureProxyAuthentication(builder, hostConfigs);
   }
 
-  private void configureProxyAuthentication(HttpClientBuilder builder, HttpClientProperties.ProxyConfiguration[] proxyConfigs) {
+  private void configureProxyAuthentication(HttpClientBuilder builder, HttpClientProperties.HostConfiguration[] hostConfigs) {
     CredentialsProvider credsProvider = new BasicCredentialsProvider();
     boolean hasProxyCredentials = false;
-    for (HttpClientProperties.ProxyConfiguration proxyConfig : proxyConfigs) {
-      if (!StringUtils.isEmpty(proxyConfig.getProxyUser()) && !StringUtils.isEmpty(proxyConfig.getProxyPassword())) {
+    for (HttpClientProperties.HostConfiguration hostConfig : hostConfigs) {
+      if (!StringUtils.isEmpty(hostConfig.getProxyUser()) && !StringUtils.isEmpty(hostConfig.getProxyPassword())) {
         credsProvider.setCredentials(
-            new AuthScope(proxyConfig.getHost(), proxyConfig.getPort()),
-            new UsernamePasswordCredentials(proxyConfig.getProxyUser(), proxyConfig.getProxyPassword()));
+            new AuthScope(hostConfig.getProxyHost(), hostConfig.getProxyPort()),
+            new UsernamePasswordCredentials(hostConfig.getProxyUser(), hostConfig.getProxyPassword()));
         hasProxyCredentials = true;
       }
     }
