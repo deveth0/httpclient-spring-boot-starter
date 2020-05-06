@@ -21,6 +21,19 @@
   <url>https://github.com/deveth0/httpclient-spring-boot-starter</url>
   <inceptionYear>2020</inceptionYear>
 
+  <organization>
+    <name>dev-eth0</name>
+    <url>https://dev-eth0.de</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <name>Alexander Muthmann</name>
+      <organization>dev-eth0</organization>
+      <organizationUrl>https://dev-eth0.de</organizationUrl>
+    </developer>
+  </developers>
+
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
