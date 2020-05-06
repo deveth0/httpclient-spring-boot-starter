@@ -4,7 +4,6 @@
 
 package de.dev.eth0.springboot.httpclient.proxy;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Arrays;
@@ -40,7 +39,7 @@ public class OkHttpProxyAuthenticator implements Authenticator {
   }
 
   @Override
-  public Request authenticate(Route route, Response response) throws IOException {
+  public Request authenticate(Route route, Response response) {
     if (proxyConfigurations.isEmpty()) {
       return null;
     }

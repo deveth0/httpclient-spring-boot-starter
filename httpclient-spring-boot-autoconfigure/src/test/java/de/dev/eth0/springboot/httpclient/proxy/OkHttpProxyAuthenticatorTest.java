@@ -7,7 +7,6 @@ package de.dev.eth0.springboot.httpclient.proxy;
 import static okhttp3.Protocol.HTTP_1_1;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.List;
@@ -67,7 +66,7 @@ public class OkHttpProxyAuthenticatorTest {
   }
 
   @Test
-  public void authenticate_alreadyFailed() throws IOException {
+  public void authenticate_alreadyFailed() {
     Request request = new Request.Builder().url("http://example.com/sample").header("Proxy-Authorization", "abcdef").build();
 
     Request authenticationRequest = underTest.authenticate(routeWithAuth, responseBuilder.request(request).build());
@@ -75,7 +74,7 @@ public class OkHttpProxyAuthenticatorTest {
   }
 
   @Test
-  public void authenticate_noCredentials() throws IOException {
+  public void authenticate_noCredentials() {
     Request request = new Request.Builder().url("http://example.com/sample").build();
 
     Request authenticationRequest = underTest.authenticate(routeWithoutAuth, responseBuilder.request(request).build());
@@ -83,7 +82,7 @@ public class OkHttpProxyAuthenticatorTest {
   }
 
   @Test
-  public void authenticate_credentials() throws IOException {
+  public void authenticate_credentials() {
     Request request = new Request.Builder().url("http://example.com/sample").build();
 
     Request authenticationRequest = underTest.authenticate(routeWithAuth, responseBuilder.request(request).build());
