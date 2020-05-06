@@ -11,7 +11,7 @@
     <version>1.0.2</version>
   </parent>
 
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <artifactId>httpclient-spring-boot-starter</artifactId>
 
   <dependencies>
