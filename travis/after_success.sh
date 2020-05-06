@@ -3,10 +3,10 @@
 # Only deploy master and develop branch to sonatype
 if [[ $TRAVIS_REPO_SLUG == "deveth0/httpclient-spring-boot-starter" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]] && [[ "$TRAVIS_BRANCH" == "feature/travis_sonatype" || "$TRAVIS_BRANCH" == "develop" ]]; then
   if [[ $TRAVIS_JDK_VERSION == "openjdk11" ]]; then
-    gpg2 --allow-secret-key-import --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import ./travis/sonatype_signing.asc
+    gpg2 --allow-secret-key-import --batch --passphrase=$PASSPHRASE --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --no-default-keyring --import ./travis/sonatype_signing.asc
     echo -e "Successfully imported GPG keys"
 
-    echo - "Seckeys"
+    echo -e "Seckeys"
     gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --list-secret-keys
     echo -e "Pubkeys"
     gpg2 --keyring=$TRAVIS_BUILD_DIR/pubring.gpg --list-public-keys
