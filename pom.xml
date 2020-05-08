@@ -14,12 +14,25 @@
 
   <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
   <artifactId>httpclient-spring-boot-root</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <packaging>pom</packaging>
 
   <description>Configuration for the HttpClient for Spring Boot</description>
   <url>https://github.com/deveth0/httpclient-spring-boot-starter</url>
   <inceptionYear>2020</inceptionYear>
+
+  <organization>
+    <name>dev-eth0</name>
+    <url>https://dev-eth0.de</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <name>Alexander Muthmann</name>
+      <organization>dev-eth0</organization>
+      <organizationUrl>https://dev-eth0.de</organizationUrl>
+    </developer>
+  </developers>
 
   <licenses>
     <license>
@@ -50,7 +63,7 @@
     <!-- versions -->
     <java.version>11</java.version>
 
-    <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+    <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
     <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
   </properties>
 
@@ -85,12 +98,12 @@
       <dependency>
         <groupId>org.hibernate.validator</groupId>
         <artifactId>hibernate-validator</artifactId>
-        <version>6.0.18.Final</version>
+        <version>6.1.5.Final</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>2.10.2</version>
+        <version>2.11.0</version>
       </dependency>
       <dependency>
         <groupId>io.github.openfeign</groupId>
@@ -100,7 +113,7 @@
       <dependency>
         <groupId>com.squareup.okhttp3</groupId>
         <artifactId>okhttp-testing-support</artifactId>
-        <version>3.12.10</version>
+        <version>3.14.8</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -113,6 +126,10 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>com.amashchenko.maven.plugin</groupId>
+        <artifactId>gitflow-maven-plugin</artifactId>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -122,12 +139,11 @@
           <version>${spring-boot.version}</version>
         </plugin>
         <plugin>
-          <groupId>external.atlassian.jgitflow</groupId>
-          <artifactId>jgitflow-maven-plugin</artifactId>
+          <groupId>com.amashchenko.maven.plugin</groupId>
+          <artifactId>gitflow-maven-plugin</artifactId>
+          <version>1.14.0</version>
           <configuration>
-            <scmCommentPrefix>[jgitflow-maven-plugin] </scmCommentPrefix>
-            <autoVersionSubmodules>true</autoVersionSubmodules>
-            <noDeploy>true</noDeploy>
+            <commitMessagePrefix>[jgitflow-maven-plugin] </commitMessagePrefix>
           </configuration>
         </plugin>
         <!-- Make sure jacoco runs -->

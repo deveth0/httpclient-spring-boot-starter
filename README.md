@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.com/deveth0/httpclient-spring-boot-starter.svg)](https://travis-ci.com/github/deveth0/httpclient-spring-boot-starter)
 [![Coverage Status](https://coveralls.io/repos/github/deveth0/httpclient-spring-boot-starter/badge.svg?branch=master)](https://coveralls.io/github/deveth0/httpclient-spring-boot-starter?branch=master)
+[![Maven central](https://maven-badges.herokuapp.com/maven-central/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter.svg)](https://oss.sonatype.org/content/repositories/snapshots/de/dev-eth0/spring-boot/httpclient/httpclient-spring-boot-starter/)
+[![License](https://img.shields.io/github/license/deveth0/httpclient-spring-boot-starter?color=brightgreen)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 This project provides a Spring-Boot Starter that enables the additional configuration of the used Httpclients. 
 
