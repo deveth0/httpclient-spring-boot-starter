@@ -7,6 +7,7 @@ package de.dev.eth0.springboot.httpclient.samples;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -36,6 +37,8 @@ public class HttpClientConfigSampleApplication implements CommandLineRunner {
   private ConfigurableApplicationContext context;
   @Autowired
   private QuoteFeignClient feignClient;
+  @Value("${demoUrl}")
+  private String demoUrl;
 
   public static void main(String[] args) {
     SpringApplication.run(HttpClientConfigSampleApplication.class);
@@ -58,7 +61,7 @@ public class HttpClientConfigSampleApplication implements CommandLineRunner {
       log.info("Running with Ok HttpClient");
     }
 
-    Quote quote = restTemplate.getForObject("https://gturnquist-quoters.cfapps.io/api/random", Quote.class);
+    Quote quote = restTemplate.getForObject(demoUrl, Quote.class);
     log.info("RestTemplate Quote: {}", quote.toString());
 
     quote = feignClient.getQuote();
