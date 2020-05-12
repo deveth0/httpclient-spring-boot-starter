@@ -88,4 +88,4 @@ The project includes the `spring-boot-maven-plugin` therefor you can simply run 
 SPRING_PROFILES_ACTIVE=okhttp mvn spring-boot:run
 ```
 
-The project also contains a `docker-compose.yml` file which starts a local `Squid` proxy to demonstrate the usecase.
+The project also contains a `docker-compose.yml` file which starts several local servers to demonstrate the usecases.

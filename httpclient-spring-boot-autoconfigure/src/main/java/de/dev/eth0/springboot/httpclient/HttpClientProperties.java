@@ -45,6 +45,10 @@ public class HttpClientProperties {
     return keystore;
   }
 
+  public TruststoreConfiguration getTruststore() {
+    return truststore;
+  }
+
   @Validated
   public static class ProxyConfiguration {
 

@@ -21,18 +21,33 @@ logging:
 http:
   client:
     proxies:
-      # Demo case for a request using a proxy. Make sure, you have one running
+      # Demo case for a request using a (optionally authenticated) proxy. Make sure, you have one running
       - hostPatterns: ["gturnquist-quoters.cfapps.io"]
-        proxyHost: 10.0.9.115
-        proxyPort: 3128
+        proxyHost: localhost
+        proxyPort: 3129
         proxyUser: test
-        proxyPassword: test
+        proxyPassword: test123
 
     timeouts:
       connectionTimeout: 5000
       socketTimeout: 10000
 
+# URL of hte used demo application
+demoUrl: "https://gturnquist-quoters.cfapps.io/api/random"
+
 ---
+# Profile which demonstrates a custom truststore
+spring.profiles: truststore
+
+http:
+  client:
+    truststore:
+      path: classpath:truststore.jks
+      password: changeit
+
+demoUrl: "https://localhost:8443/random.json"
+---
+
 
 # Profile which enables OkHttp instead of Apache
 spring:
