@@ -16,7 +16,18 @@ import org.springframework.validation.annotation.Validated;
 public class HttpClientProperties {
 
   private final TimeoutConfiguration timeouts = new TimeoutConfiguration();
+  private final KeystoreConfiguration keystore = new KeystoreConfiguration();
+  private final TruststoreConfiguration truststore = new TruststoreConfiguration();
   private ProxyConfiguration[] proxies = {};
+  private String sslContext = "TLSv1.2";
+
+  public String getSslContext() {
+    return sslContext;
+  }
+
+  public void setSslContext(String sslContext) {
+    this.sslContext = sslContext;
+  }
 
   public ProxyConfiguration[] getProxies() {
     return proxies;
@@ -28,6 +39,14 @@ public class HttpClientProperties {
 
   public TimeoutConfiguration getTimeouts() {
     return timeouts;
+  }
+
+  public KeystoreConfiguration getKeystore() {
+    return keystore;
+  }
+
+  public TruststoreConfiguration getTruststore() {
+    return truststore;
   }
 
   @Validated
@@ -86,6 +105,77 @@ public class HttpClientProperties {
       this.proxyPassword = proxyPassword;
     }
   }
+
+
+  @Validated
+  public static class KeystoreConfiguration {
+
+    @NotBlank
+    private String path;
+    @NotBlank
+    private String password;
+    private String type = "PKCS12";
+
+    public String getPath() {
+      return path;
+    }
+
+    public void setPath(String path) {
+      this.path = path;
+    }
+
+    public String getPassword() {
+      return password;
+    }
+
+    public void setPassword(String password) {
+      this.password = password;
+    }
+
+    public String getType() {
+      return type;
+    }
+
+    public void setType(String type) {
+      this.type = type;
+    }
+  }
+
+
+  @Validated
+  public static class TruststoreConfiguration {
+
+    @NotBlank
+    private String path;
+    @NotBlank
+    private String password;
+    private String type = "JKS";
+
+    public String getPath() {
+      return path;
+    }
+
+    public void setPath(String path) {
+      this.path = path;
+    }
+
+    public String getPassword() {
+      return password;
+    }
+
+    public void setPassword(String password) {
+      this.password = password;
+    }
+
+    public String getType() {
+      return type;
+    }
+
+    public void setType(String type) {
+      this.type = type;
+    }
+  }
+
 
   /**
    * Timeout Configuration

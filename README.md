@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.com/deveth0/httpclient-spring-boot-starter.svg)](https://travis-ci.com/github/deveth0/httpclient-spring-boot-starter)
 [![Coverage Status](https://coveralls.io/repos/github/deveth0/httpclient-spring-boot-starter/badge.svg?branch=master)](https://coveralls.io/github/deveth0/httpclient-spring-boot-starter?branch=master)
-[![Maven central](https://maven-badges.herokuapp.com/maven-central/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter)
-[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter.svg)](https://oss.sonatype.org/content/repositories/snapshots/de/dev-eth0/spring-boot/httpclient/httpclient-spring-boot-starter/)
+[![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter?color=brightgreen&label=release&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/content/repositories/releases/de/dev-eth0/spring-boot/httpclient/httpclient-spring-boot-starter/)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter?color=brightgreen&label=snapshot&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/content/repositories/snapshots/de/dev-eth0/spring-boot/httpclient/httpclient-spring-boot-starter/)
 [![License](https://img.shields.io/github/license/deveth0/httpclient-spring-boot-starter?color=brightgreen)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 This project provides a Spring-Boot Starter that enables the additional configuration of the used Httpclients. 
@@ -47,13 +47,21 @@ It's possible to configure the proxy based on the requested hostnames using the 
 
 | Config | Description | Default | Example | 
 |---|---|---|---|
-| timeouts.connectionTimeout  | Connection Timeout in ms  | 5000 |  |
-| timeouts.socketTimeout  |  Socket Timeout in ms, for OkHttp this is used as readTimeout and writeTimeout | 10000  |
+| sslContext | SSL Version (optional) | `TLSv1.2` | `TLSv1.3` |
+| timeouts.connectionTimeout (optional) | Connection Timeout in ms  | 5000 |  |
+| timeouts.socketTimeout (optional) |  Socket Timeout in ms, for OkHttp this is used as readTimeout and writeTimeout | 10000  |
+| proxies[] (optional) | Configuration for used proxy servers | | |
 | proxies[].hostPatterns | Pattern for matching the hostname, empty matches all  | empty | `google.*`  |
 | proxies[].proxyHost | Hostname or IP of the Proxy | | `10.0.9.1` or `corp-proxy.domain` |
 | proxies[].proxyPort | Port of the Proxy (optional) | 3128 | |
 | proxies[].proxyUser | Proxy user name (optional) | | `testUser`|
 | proxies[].proxyPassword | Proxy password (optional) | | `testPassword` |
+| keystore.path | Keystore file path | | `classpath:keystore.jks` |
+| keystore.password | Keystore password | | `changeit` |
+| keystore.type | Keystore type (optional) | | `PKCS12` |
+| truststore.path | Truststore file path | | `classpath:truststore.jks` |
+| truststore.password | Truststore password | | `changeit` |
+| truststore.type | Truststore type (optional) | | `JKS` |
 
 Example:
 ```
@@ -81,4 +89,4 @@ The project includes the `spring-boot-maven-plugin` therefor you can simply run 
 SPRING_PROFILES_ACTIVE=okhttp mvn spring-boot:run
 ```
 
-The project also contains a `docker-compose.yml` file which starts a local `Squid` proxy to demonstrate the usecase.
+The project also contains a `docker-compose.yml` file which starts several local servers to demonstrate the usecases.
