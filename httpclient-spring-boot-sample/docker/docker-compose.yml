@@ -2,7 +2,16 @@
 version: "3.6"
 
 services: 
-  squid:
-    build: .
+  proxy:
+    build: ./proxy
     ports:
       - "3128:3128"
+  proxy_auth:
+    build: ./proxy_auth
+    ports:
+      - "3129:3128"
+  vhost_ssl:
+    build: ./vhost_ssl
+    ports:
+      - "80:80"
+      - "443:443"
