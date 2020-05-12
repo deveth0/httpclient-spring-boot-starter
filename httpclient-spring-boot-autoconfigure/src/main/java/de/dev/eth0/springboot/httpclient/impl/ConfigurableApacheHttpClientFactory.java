@@ -4,11 +4,15 @@
 
 package de.dev.eth0.springboot.httpclient.impl;
 
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
@@ -19,6 +23,7 @@ import org.springframework.cloud.commons.httpclient.DefaultApacheHttpClientFacto
 
 import de.dev.eth0.springboot.httpclient.HttpClientProperties;
 import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
+import de.dev.eth0.springboot.httpclient.impl.certificates.CertificateLoader;
 
 /**
  * Factory used to create a HttpClient Instance
@@ -38,6 +43,7 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
   public HttpClientBuilder createBuilder() {
     HttpClientBuilder builder = super.createBuilder();
     configureTimeouts(builder);
+    configureSSL(builder);
 
     HttpClientProperties.ProxyConfiguration[] hostConfigs = httpClientProperties.getProxies();
 
@@ -57,12 +63,23 @@ public class ConfigurableApacheHttpClientFactory extends DefaultApacheHttpClient
         .build());
   }
 
-  private void configureProxies(HttpClientBuilder builder, HttpClientProperties.ProxyConfiguration[] hostConfigs) {
+  private void configureSSL(HttpClientBuilder builder) {
+    TrustManagerFactory trustManagerFactory = CertificateLoader.getTrustManagerFactory(httpClientProperties);
+    KeyManagerFactory keyManagerFactory = CertificateLoader.getKeyManagerFactory(httpClientProperties);
+    SSLContext sslContext = CertificateLoader.buildSSLContext(httpClientProperties, keyManagerFactory, trustManagerFactory);
+    if (sslContext != null) {
+      SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext);
+      builder.setSSLSocketFactory(sslSocketFactory).build();
+    }
+    else {
+      LOG.warn("Invalid SSL Context, skipping");
+    }
+  }
 
+  private void configureProxies(HttpClientBuilder builder, HttpClientProperties.ProxyConfiguration[] hostConfigs) {
     ConfigurableProxySelector proxySelector = new ConfigurableProxySelector(hostConfigs);
     SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(proxySelector);
     builder.setRoutePlanner(routePlanner);
-
   }
 
   private void configureAuthentication(HttpClientBuilder builder, HttpClientProperties.ProxyConfiguration[] hostConfigs) {

@@ -47,6 +47,7 @@ It's possible to configure the proxy based on the requested hostnames using the 
 
 | Config | Description | Default | Example | 
 |---|---|---|---|
+| sslContext | SSL Version | `TLSv1.2` | |
 | timeouts.connectionTimeout  | Connection Timeout in ms  | 5000 |  |
 | timeouts.socketTimeout  |  Socket Timeout in ms, for OkHttp this is used as readTimeout and writeTimeout | 10000  |
 | proxies[].hostPatterns | Pattern for matching the hostname, empty matches all  | empty | `google.*`  |
@@ -54,6 +55,12 @@ It's possible to configure the proxy based on the requested hostnames using the 
 | proxies[].proxyPort | Port of the Proxy (optional) | 3128 | |
 | proxies[].proxyUser | Proxy user name (optional) | | `testUser`|
 | proxies[].proxyPassword | Proxy password (optional) | | `testPassword` |
+| keystore.path | Keystore file path | | `changeit` |
+| keystore.password | Keystore password | | `changeit` |
+| keystore.type | Keystore type (optional) | | `PKCS12` |
+| truststore.path | Truststore file path | | `changeit` |
+| truststore.password | Truststore password | | `changeit` |
+| truststore.type | Truststore type (optional) | | `JKS` |
 
 Example:
 ```
