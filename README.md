@@ -47,18 +47,19 @@ It's possible to configure the proxy based on the requested hostnames using the 
 
 | Config | Description | Default | Example | 
 |---|---|---|---|
-| sslContext | SSL Version | `TLSv1.2` | |
-| timeouts.connectionTimeout  | Connection Timeout in ms  | 5000 |  |
-| timeouts.socketTimeout  |  Socket Timeout in ms, for OkHttp this is used as readTimeout and writeTimeout | 10000  |
+| sslContext | SSL Version (optional) | `TLSv1.2` | `TLSv1.3` |
+| timeouts.connectionTimeout (optional) | Connection Timeout in ms  | 5000 |  |
+| timeouts.socketTimeout (optional) |  Socket Timeout in ms, for OkHttp this is used as readTimeout and writeTimeout | 10000  |
+| proxies[] (optional) | Configuration for used proxy servers | | |
 | proxies[].hostPatterns | Pattern for matching the hostname, empty matches all  | empty | `google.*`  |
 | proxies[].proxyHost | Hostname or IP of the Proxy | | `10.0.9.1` or `corp-proxy.domain` |
 | proxies[].proxyPort | Port of the Proxy (optional) | 3128 | |
 | proxies[].proxyUser | Proxy user name (optional) | | `testUser`|
 | proxies[].proxyPassword | Proxy password (optional) | | `testPassword` |
-| keystore.path | Keystore file path | | `changeit` |
+| keystore.path | Keystore file path | | `classpath:keystore.jks` |
 | keystore.password | Keystore password | | `changeit` |
 | keystore.type | Keystore type (optional) | | `PKCS12` |
-| truststore.path | Truststore file path | | `changeit` |
+| truststore.path | Truststore file path | | `classpath:truststore.jks` |
 | truststore.password | Truststore password | | `changeit` |
 | truststore.type | Truststore type (optional) | | `JKS` |
 
