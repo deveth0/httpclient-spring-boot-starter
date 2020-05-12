@@ -60,30 +60,23 @@ public class CertificateLoader {
    */
   public static TrustManagerFactory getTrustManagerFactory(HttpClientProperties httpClientProperties) {
     HttpClientProperties.TruststoreConfiguration truststoreConfiguration = httpClientProperties.getTruststore();
-    TrustManagerFactory tmf;
-    try {
-      tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-      tmf.init((KeyStore)null);
-    }
-    catch (NoSuchAlgorithmException | KeyStoreException ex) {
-      LOG.error("Could not instanciate Truststore", ex);
-      return null;
-    }
     if (StringUtils.isAnyBlank(truststoreConfiguration.getPath(), truststoreConfiguration.getPassword())) {
       LOG.warn("Truststore Configuration incomplete, skipping");
+      return null;
     }
-    else {
-      try (FileInputStream is = new FileInputStream(ResourceUtils.getFile(truststoreConfiguration.getPath()))) {
-        KeyStore keyStore = KeyStore.getInstance(truststoreConfiguration.getType());
-        keyStore.load(is, truststoreConfiguration.getPassword().toCharArray());
-        tmf.init(keyStore);
-        LOG.info("Truststore initialized successfully");
-      }
-      catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException ex) {
-        LOG.error("Truststore could not be loaded, skipping", ex);
-      }
+
+    try (FileInputStream is = new FileInputStream(ResourceUtils.getFile(truststoreConfiguration.getPath()))) {
+      KeyStore keyStore = KeyStore.getInstance(truststoreConfiguration.getType());
+      keyStore.load(is, truststoreConfiguration.getPassword().toCharArray());
+      TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+      tmf.init(keyStore);
+      LOG.info("Truststore initialized successfully");
+      return tmf;
     }
-    return tmf;
+    catch (NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException ex) {
+      LOG.error("Truststore could not be loaded, skipping", ex);
+      return null;
+    }
   }
 
   /**

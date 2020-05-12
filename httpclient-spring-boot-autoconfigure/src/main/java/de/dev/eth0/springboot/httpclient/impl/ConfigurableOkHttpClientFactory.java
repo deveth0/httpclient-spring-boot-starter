@@ -7,22 +7,18 @@ package de.dev.eth0.springboot.httpclient.impl;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.commons.httpclient.DefaultOkHttpClientFactory;
 
 import de.dev.eth0.springboot.httpclient.HttpClientProperties;
+import de.dev.eth0.springboot.httpclient.impl.certificates.CertificateLoader;
 import de.dev.eth0.springboot.httpclient.impl.proxy.ConfigurableProxySelector;
 import de.dev.eth0.springboot.httpclient.impl.proxy.OkHttpProxyAuthenticator;
-import de.dev.eth0.springboot.httpclient.impl.certificates.CertificateLoader;
 import okhttp3.OkHttpClient;
 
 /**
@@ -58,7 +54,7 @@ public class ConfigurableOkHttpClientFactory extends DefaultOkHttpClientFactory 
     TrustManagerFactory trustManagerFactory = CertificateLoader.getTrustManagerFactory(httpClientProperties);
     KeyManagerFactory keyManagerFactory = CertificateLoader.getKeyManagerFactory(httpClientProperties);
     SSLContext sslContext = CertificateLoader.buildSSLContext(httpClientProperties, keyManagerFactory, trustManagerFactory);
-    if (sslContext != null) {
+    if (sslContext != null && trustManagerFactory != null) {
       Optional<X509TrustManager> trustManager = Arrays.stream(trustManagerFactory.getTrustManagers())
           .filter(tm -> tm instanceof X509TrustManager)
           .map(tm -> (X509TrustManager)tm)

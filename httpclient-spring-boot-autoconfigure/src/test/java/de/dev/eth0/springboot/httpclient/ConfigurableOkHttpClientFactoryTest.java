@@ -27,6 +27,8 @@ class ConfigurableOkHttpClientFactoryTest {
   private HttpClientProperties httpClientProperties;
 
   private final HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
+  private final HttpClientProperties.TruststoreConfiguration truststoreConfiguration = new HttpClientProperties.TruststoreConfiguration();
+  private final HttpClientProperties.KeystoreConfiguration keystoreConfiguration = new HttpClientProperties.KeystoreConfiguration();
 
   private final HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
 
@@ -35,8 +37,11 @@ class ConfigurableOkHttpClientFactoryTest {
 
   @BeforeEach
   public void setup() {
+    when(httpClientProperties.getSslContext()).thenReturn("TLSv1.2");
     when(httpClientProperties.getTimeouts()).thenReturn(timeoutConfiguration);
     when(httpClientProperties.getProxies()).thenReturn(proxyConfiguration);
+    when(httpClientProperties.getKeystore()).thenReturn(keystoreConfiguration);
+    when(httpClientProperties.getTruststore()).thenReturn(truststoreConfiguration);
 
     hostConfig = new HttpClientProperties.ProxyConfiguration();
     hostConfigWithAuth = new HttpClientProperties.ProxyConfiguration();

@@ -32,7 +32,8 @@ public class ConfigurableApacheHttpClientFactoryTest {
   private HttpClientProperties httpClientProperties;
 
   private final HttpClientProperties.TimeoutConfiguration timeoutConfiguration = new HttpClientProperties.TimeoutConfiguration();
-
+  private final HttpClientProperties.TruststoreConfiguration truststoreConfiguration = new HttpClientProperties.TruststoreConfiguration();
+  private final HttpClientProperties.KeystoreConfiguration keystoreConfiguration = new HttpClientProperties.KeystoreConfiguration();
   private final HttpClientProperties.ProxyConfiguration[] proxyConfiguration = {};
 
   private HttpClientProperties.ProxyConfiguration hostConfig;
@@ -40,8 +41,11 @@ public class ConfigurableApacheHttpClientFactoryTest {
 
   @BeforeEach
   public void setup() {
+    when(httpClientProperties.getSslContext()).thenReturn("TLSv1.2");
     when(httpClientProperties.getProxies()).thenReturn(proxyConfiguration);
     when(httpClientProperties.getTimeouts()).thenReturn(timeoutConfiguration);
+    when(httpClientProperties.getKeystore()).thenReturn(keystoreConfiguration);
+    when(httpClientProperties.getTruststore()).thenReturn(truststoreConfiguration);
 
     hostConfig = new HttpClientProperties.ProxyConfiguration();
     hostConfigWithAuth = new HttpClientProperties.ProxyConfiguration();
