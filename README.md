@@ -1,6 +1,7 @@
 # httpclient-spring-boot-starter
 
 [![Build Status](https://travis-ci.com/deveth0/httpclient-spring-boot-starter.svg)](https://travis-ci.com/github/deveth0/httpclient-spring-boot-starter)
+![Code scanning - action](https://github.com/deveth0/httpclient-spring-boot-starter/workflows/Code%20scanning%20-%20action/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/deveth0/httpclient-spring-boot-starter/badge.svg?branch=master)](https://coveralls.io/github/deveth0/httpclient-spring-boot-starter?branch=master)
 [![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter?color=brightgreen&label=release&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/content/repositories/releases/de/dev-eth0/spring-boot/httpclient/httpclient-spring-boot-starter/)
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/de.dev-eth0.spring-boot.httpclient/httpclient-spring-boot-starter?color=brightgreen&label=snapshot&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/content/repositories/snapshots/de/dev-eth0/spring-boot/httpclient/httpclient-spring-boot-starter/)
