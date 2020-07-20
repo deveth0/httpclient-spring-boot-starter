@@ -19,6 +19,7 @@ The `httpclient-spring-boot-starter` brings most of the required configuration w
 <dependency>
   <groupId>de.dev-eth0.spring-boot.httpclient</groupId>
   <artifactId>httpclient-spring-boot-starter</artifactId>
+  <version>LATEST-VERSION</version>
 </dependency>
 ```
 
