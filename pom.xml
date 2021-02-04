@@ -8,7 +8,7 @@
   <parent>
     <groupId>io.wcm.maven</groupId>
     <artifactId>io.wcm.maven.global-parent</artifactId>
-    <version>35</version>
+    <version>36</version>
     <relativePath />
   </parent>
 
@@ -63,8 +63,8 @@
     <!-- versions -->
     <java.version>11</java.version>
 
-    <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
-    <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+    <spring-boot.version>2.4.2</spring-boot.version>
+    <spring-cloud.version>2020.0.1</spring-cloud.version>
   </properties>
 
   <dependencyManagement>
@@ -94,28 +94,6 @@
         <artifactId>httpclient-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
-
-      <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>6.1.5.Final</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-annotations</artifactId>
-        <version>2.11.2</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.openfeign</groupId>
-        <artifactId>feign-okhttp</artifactId>
-        <version>11.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.squareup.okhttp3</groupId>
-        <artifactId>okhttp-testing-support</artifactId>
-        <version>3.14.9</version>
-        <scope>test</scope>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -141,7 +119,7 @@
         <plugin>
           <groupId>com.amashchenko.maven.plugin</groupId>
           <artifactId>gitflow-maven-plugin</artifactId>
-          <version>1.14.0</version>
+          <version>1.15.1</version>
           <configuration>
             <commitMessagePrefix>[gitflow-maven-plugin] </commitMessagePrefix>
           </configuration>
