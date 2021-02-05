@@ -26,7 +26,6 @@ public class HttpClientAutoConfigurationTest {
 
   private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
       .withBean(HttpClientConfiguration.class)
-      .withBean(HttpClientAutoConfiguration.class)
       .withBean(HttpClientBuilder.class)
       .withBean(OkHttpClient.Builder.class);
 
