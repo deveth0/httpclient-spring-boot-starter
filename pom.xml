@@ -65,6 +65,7 @@
 
     <spring-boot.version>2.4.2</spring-boot.version>
     <spring-cloud.version>2020.0.1</spring-cloud.version>
+
   </properties>
 
   <dependencyManagement>
@@ -94,6 +95,7 @@
         <artifactId>httpclient-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+
     </dependencies>
   </dependencyManagement>
 
