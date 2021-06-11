@@ -63,7 +63,7 @@
     <!-- versions -->
     <java.version>11</java.version>
 
-    <spring-boot.version>2.4.3</spring-boot.version>
+    <spring-boot.version>2.5.1</spring-boot.version>
     <spring-cloud.version>2020.0.1</spring-cloud.version>
 
   </properties>
